@@ -35,6 +35,59 @@ A unified, multi-model AI suite for NodeBB that seamlessly handles real-time mod
 
 ---
 
+## 🏗️ Architecture & 13 Method Design Patterns
+
+Cortex is architected around a **Central Model Provider Singleton Factory** and **13 Gang of Four (GoF) design patterns** for enterprise reliability, high extensibility, and maintainability:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                   CortexAIFacade (Pattern 6: Facade)     │
+└────────────┬───────────────────────────────┬─────────────┘
+             │                               │
+             ▼                               ▼
+┌─────────────────────────┐    ┌──────────────────────────┐
+│ AIEngineAbstractFactory │    │   CentralModelFactory    │
+│  (Pattern 3: Abstract   │    │  (Pattern 1: Singleton   │
+│         Factory)        │    │  Pattern 2: Factory Mthd)│
+└────────────┬────────────┘    └─────────────┬────────────┘
+             │                               │
+             ▼                               ▼
+┌─────────────────────────┐    ┌──────────────────────────┐
+│  AI Commands Execution  │    │   CachedProviderProxy    │
+│  (Pattern 12: Command)  │    │    (Pattern 9: Proxy)    │
+└────────────┬────────────┘    └─────────────┬────────────┘
+             │                               │
+             ▼                               ▼
+┌─────────────────────────┐    ┌──────────────────────────┐
+│ Chain of Responsibility │    │   Telemetry & Retry      │
+│  (Pattern 7: Pipeline)  │    │  (Pattern 8: Decorator)  │
+└────────────┬────────────┘    └─────────────┬────────────┘
+             │                               │
+             ▼                               ▼
+┌─────────────────────────┐    ┌──────────────────────────┐
+│ InferenceRequestBuilder │    │   Provider Adapters      │
+│  (Pattern 13: Builder)  │    │  (Pattern 4: Strategy    │
+└─────────────────────────┘    │   Pattern 5: Adapter     │
+                               │   Pattern 10: Template)  │
+                               └──────────────────────────┘
+```
+
+1. **Singleton Pattern (`lib/core/factory.js`)**: `CentralModelFactory.getInstance()` maintains a single source of truth for provider pools, shared state, and connection lifecycles across NodeBB.
+2. **Factory Method Pattern (`lib/core/factory.js`)**: `CentralModelFactory.createProvider(type)` encapsulates the instantiation and assembly of provider pipelines.
+3. **Abstract Factory Pattern (`lib/core/abstract-factory.js`)**: `AIEngineAbstractFactory` produces cohesive feature engine families (`ModerationEngineFactory`, `CopilotEngineFactory`, `SummarizerEngineFactory`).
+4. **Strategy Pattern (`lib/core/adapters/*`)**: Interchangeable provider strategies (`OllamaAdapter`, `GeminiAdapter`, `AnthropicAdapter`, `OpenAIAdapter`) selectable dynamically per task.
+5. **Adapter Pattern (`lib/core/adapters/*`)**: Translates heterogeneous provider APIs and schemas into a uniform, typed interface (`generateText`, `generateJSON`, `listModels`).
+6. **Facade Pattern (`lib/core/facade.js`)**: `CortexAIFacade` exposes a clean, unified API surface masking all internal pipeline complexities.
+7. **Chain of Responsibility Pattern (`lib/core/pipeline/*`)**: Pre-inference pipeline sequentially processing exemptions (`ExemptionHandler`), sanitization (`SanitizerHandler`), and rate limits (`RateLimiterHandler`).
+8. **Decorator Pattern (`lib/core/decorators/*`)**: Transparently adds exponential retry backoff (`RetryDecorator`) and latency/token telemetry (`TelemetryDecorator`) without modifying adapters.
+9. **Proxy Pattern (`lib/core/proxy/cache-proxy.js`)**: `CachedProviderProxy` caches idempotent inferences (such as summaries and embeddings) to slash network overhead.
+10. **Template Method Pattern (`lib/core/base-provider.js`)**: `BaseProvider.executeWorkflow()` defines the invariant multi-step inference pipeline with customizable hooks.
+11. **Observer Pattern (`lib/core/events/event-bus.js`)**: Decoupled event emitter broadcasting domain events (`post:quarantined`, `copilot:replied`, `summary:generated`) for auditing and real-time alerts.
+12. **Command Pattern (`lib/core/commands/*`)**: `ModeratePostCommand`, `CopilotReplyCommand`, and `SummarizeThreadCommand` encapsulate autonomous workflows into executable, testable units.
+13. **Builder Pattern (`lib/core/builders/request-builder.js`)**: `InferenceRequestBuilder` provides fluent, type-safe construction of complex LLM inference requests.
+
+---
+
 ## ⚡ Supported Providers
 
 | Provider | Recommended For | Supported Models |
@@ -67,4 +120,4 @@ The plugin includes an in-ACP **Moderation Sandbox** allowing administrators to 
 ---
 
 ## 📄 License
-BSD-2-Clause © 2026 Cortex Team
+BSD-2-Clause © 2026 Mazafard
