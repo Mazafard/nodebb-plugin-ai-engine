@@ -10,7 +10,7 @@
 					<div>
 						<div class="d-flex align-items-center gap-2">
 							<h3 class="mb-0 fw-bold">Cortex AI Community Engine</h3>
-							<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">v1.0.0</span>
+							<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">v{version}</span>
 							<span class="badge bg-secondary-subtle text-secondary border px-2 py-1">NodeBB v4</span>
 						</div>
 						<p class="text-muted mb-0 mt-1">Autonomous moderation, semantic RAG assistance, and thread synthesis powered by local and frontier LLMs.</p>
