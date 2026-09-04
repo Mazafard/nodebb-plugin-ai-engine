@@ -42,14 +42,50 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			});
 		});
 
+		// Tab URL & Refresh Persistence
+		function activateTabFromHash() {
+			const hash = window.location.hash;
+			if (hash) {
+				const tabBtn = $(`button[data-bs-target="${hash}"]`);
+				if (tabBtn.length) {
+					tabBtn.trigger('click');
+					if (window.bootstrap && window.bootstrap.Tab) {
+						new window.bootstrap.Tab(tabBtn[0]).show();
+					}
+				}
+			}
+		}
+
+		// Update URL hash whenever user switches tabs
+		$('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+			const target = $(e.target).attr('data-bs-target');
+			if (target) {
+				if (history.replaceState) {
+					history.replaceState(null, null, target);
+				} else {
+					window.location.hash = target;
+				}
+			}
+		});
+
+		// Activate tab on page load
+		activateTabFromHash();
+
+		// Support browser forward/back buttons
+		$(window).on('hashchange', activateTabFromHash);
+
 		function renderModelPicker(provider, models, currentVal) {
 			const container = $(`#${provider}-model-picker`);
-			if (!container.length || !models || !models.length) return;
+			if (!container.length) return;
+			if (!models || !models.length) {
+				container.html('').addClass('d-none');
+				return;
+			}
 
 			let html = `
 				<div class="p-2 bg-light rounded-3 border">
 					<div class="d-flex justify-content-between align-items-center mb-1">
-						<span class="small fw-bold text-muted"><i class="fa fa-list me-1"></i> Detected Models (${models.length}):</span>
+						<span class="small fw-bold text-muted"><i class="fa fa-list me-1"></i> Received Models (${models.length}):</span>
 						<span class="small text-muted" style="font-size: 0.75rem;">Click to select</span>
 					</div>
 					<div class="d-flex flex-wrap gap-1">
