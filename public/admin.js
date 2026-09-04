@@ -39,6 +39,56 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			});
 		});
 
+		function renderModelPicker(provider, models, currentVal) {
+			const container = $(`#${provider}-model-picker`);
+			if (!container.length || !models || !models.length) return;
+
+			let html = `
+				<div class="p-2 bg-light rounded-3 border">
+					<div class="d-flex justify-content-between align-items-center mb-1">
+						<span class="small fw-bold text-muted"><i class="fa fa-list me-1"></i> Detected Models (${models.length}):</span>
+						<span class="small text-muted" style="font-size: 0.75rem;">Click to select</span>
+					</div>
+					<div class="d-flex flex-wrap gap-1">
+			`;
+
+			models.forEach(function (m) {
+				const isSelected = (m === currentVal);
+				const btnClass = isSelected ? 'btn-primary active' : 'btn-outline-secondary';
+				html += `<button type="button" class="btn btn-sm ${btnClass} py-0 px-2 model-select-pill" data-provider="${provider}" data-model="${m}">${m}</button>`;
+			});
+
+			html += `
+					</div>
+				</div>
+			`;
+
+			container.html(html).removeClass('d-none');
+		}
+
+		// Handle clicking any model pill
+		$(document).on('click', '.model-select-pill', function () {
+			const btn = $(this);
+			const provider = btn.attr('data-provider');
+			const model = btn.attr('data-model');
+			const container = $(`#${provider}-model-picker`);
+
+			let input;
+			if (provider === 'ollama') input = $('#ollamaDefaultModel');
+			else if (provider === 'gemini') input = $('#geminiDefaultModel');
+			else if (provider === 'anthropic') input = $('#anthropicDefaultModel');
+			else if (provider === 'openai') input = $('#openaiDefaultModel');
+
+			if (input && input.length) {
+				input.val(model);
+			}
+
+			container.find('.model-select-pill').removeClass('btn-primary active').addClass('btn-outline-secondary');
+			btn.removeClass('btn-outline-secondary').addClass('btn-primary active');
+
+			alerts.success(`Selected ${provider.toUpperCase()} model: ${model}`);
+		});
+
 		// 5. Test Provider Connection
 		$('.test-provider-btn').on('click', function () {
 			const btn = $(this);
@@ -67,6 +117,9 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 					if (res && res.ok) {
 						badge.html(`<span class="badge bg-success-subtle text-success border border-success-subtle"><i class="fa fa-check-circle me-1"></i> Connected (${res.latencyMs}ms)</span>`);
 						alerts.success(`${provider.toUpperCase()} connected successfully! (${res.latencyMs}ms)`);
+						if (res.models && res.models.length) {
+							renderModelPicker(provider, res.models, $(`#${provider}DefaultModel`).val());
+						}
 					} else {
 						badge.html(`<span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="fa fa-times-circle me-1"></i> Failed</span>`);
 						alerts.error(res.error || 'Connection failed.');
@@ -92,7 +145,10 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 				btn.prop('disabled', false).html('<i class="fa fa-sync-alt"></i> Detect');
 				if (res && res.ok && res.models && res.models.length) {
 					alerts.success(`Found ${res.models.length} available models for ${provider.toUpperCase()}`);
-					input.val(res.models[0]);
+					renderModelPicker(provider, res.models, input.val() || res.models[0]);
+					if (!input.val()) {
+						input.val(res.models[0]);
+					}
 				} else {
 					alerts.alert({
 						type: 'info',

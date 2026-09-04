@@ -151,6 +151,7 @@
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
+										<div class="model-picker-container mt-2 d-none" id="ollama-model-picker"></div>
 									</div>
 									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
 										<span class="provider-status-badge text-muted small" id="ollama-status">Untested</span>
@@ -188,6 +189,7 @@
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
+										<div class="model-picker-container mt-2 d-none" id="gemini-model-picker"></div>
 									</div>
 									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
 										<span class="provider-status-badge text-muted small" id="gemini-status">Untested</span>
@@ -219,7 +221,13 @@
 									</div>
 									<div class="mb-3">
 										<label class="form-label small fw-bold">Default Model</label>
-										<input type="text" class="form-control" id="anthropicDefaultModel" name="anthropicDefaultModel" value="{settings.anthropicDefaultModel}" placeholder="claude-3-5-sonnet-20241022">
+										<div class="input-group">
+											<input type="text" class="form-control" id="anthropicDefaultModel" name="anthropicDefaultModel" value="{settings.anthropicDefaultModel}" placeholder="claude-3-5-sonnet-20241022">
+											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="anthropic">
+												<i class="fa fa-sync-alt"></i> Detect
+											</button>
+										</div>
+										<div class="model-picker-container mt-2 d-none" id="anthropic-model-picker"></div>
 									</div>
 									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
 										<span class="provider-status-badge text-muted small" id="anthropic-status">Untested</span>
@@ -249,16 +257,22 @@
 											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
 										</div>
 									</div>
-									<div class="row g-2 mb-3">
+									<div class="row g-2 mb-2">
 										<div class="col-8">
 											<label class="form-label small fw-bold">Base URL</label>
 											<input type="text" class="form-control" id="openaiBaseUrl" name="openaiBaseUrl" value="{settings.openaiBaseUrl}" placeholder="https://api.openai.com/v1">
 										</div>
 										<div class="col-4">
 											<label class="form-label small fw-bold">Default Model</label>
-											<input type="text" class="form-control" id="openaiDefaultModel" name="openaiDefaultModel" value="{settings.openaiDefaultModel}" placeholder="gpt-4o-mini">
+											<div class="input-group">
+												<input type="text" class="form-control" id="openaiDefaultModel" name="openaiDefaultModel" value="{settings.openaiDefaultModel}" placeholder="gpt-4o-mini">
+												<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="openai">
+													<i class="fa fa-sync-alt"></i> Detect
+												</button>
+											</div>
 										</div>
 									</div>
+									<div class="model-picker-container mb-3 d-none" id="openai-model-picker"></div>
 									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
 										<span class="provider-status-badge text-muted small" id="openai-status">Untested</span>
 										<button type="button" class="btn btn-sm btn-outline-info test-provider-btn" data-provider="openai">

@@ -54,3 +54,14 @@
 .provider-status-badge {
 	font-weight: 500;
 }
+
+.model-select-pill {
+	font-size: 0.8rem;
+	border-radius: 6px;
+	transition: all 0.15s ease;
+}
+
+.model-select-pill:hover {
+	transform: translateY(-1px);
+}
+
