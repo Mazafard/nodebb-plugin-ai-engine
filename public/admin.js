@@ -4,6 +4,9 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 	const ACP = {};
 
 	ACP.init = function () {
+		const forumPath = (typeof config !== 'undefined' && config.relative_path) ? config.relative_path : '';
+		const csrfHeader = (typeof config !== 'undefined' && config.csrf_token) ? config.csrf_token : '';
+
 		// 1. Settings load
 		settings.load('ai-engine', $('#ai-settings-form'));
 
@@ -98,7 +101,7 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			badge.html('<i class="fa fa-spinner fa-spin"></i> Testing...');
 			btn.prop('disabled', true);
 
-			const config = {
+			const providerPayload = {
 				ollamaUrl: $('#ollamaUrl').val(),
 				geminiApiKey: $('#geminiApiKey').val(),
 				anthropicApiKey: $('#anthropicApiKey').val(),
@@ -107,11 +110,11 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			};
 
 			$.ajax({
-				url: config.relative_path + '/api/v3/plugins/ai-engine/test-provider',
+				url: forumPath + '/api/v3/plugins/ai-engine/test-provider',
 				type: 'POST',
-				headers: { 'x-csrf-token': config.csrf_token },
+				headers: { 'x-csrf-token': csrfHeader },
 				contentType: 'application/json',
-				data: JSON.stringify({ provider, config }),
+				data: JSON.stringify({ provider, config: providerPayload }),
 				success: function (res) {
 					btn.prop('disabled', false);
 					if (res && res.ok) {
@@ -128,7 +131,8 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 				error: function (xhr) {
 					btn.prop('disabled', false);
 					badge.html(`<span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="fa fa-times-circle me-1"></i> Error</span>`);
-					alerts.error(xhr.responseJSON?.error || 'Network error testing provider.');
+					const err = (xhr.responseJSON && xhr.responseJSON.error) || xhr.statusText || 'Network error testing provider.';
+					alerts.error(err);
 				},
 			});
 		});
@@ -141,7 +145,7 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 
 			btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
-			$.getJSON(config.relative_path + `/api/v3/plugins/ai-engine/models/${provider}`, function (res) {
+			$.getJSON(forumPath + `/api/v3/plugins/ai-engine/models/${provider}`, function (res) {
 				btn.prop('disabled', false).html('<i class="fa fa-sync-alt"></i> Detect');
 				if (res && res.ok && res.models && res.models.length) {
 					alerts.success(`Found ${res.models.length} available models for ${provider.toUpperCase()}`);
@@ -176,9 +180,9 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			resultBox.html('');
 
 			$.ajax({
-				url: config.relative_path + '/api/v3/plugins/ai-engine/simulate-moderation',
+				url: forumPath + '/api/v3/plugins/ai-engine/simulate-moderation',
 				type: 'POST',
-				headers: { 'x-csrf-token': config.csrf_token },
+				headers: { 'x-csrf-token': csrfHeader },
 				contentType: 'application/json',
 				data: JSON.stringify({ sampleText: text }),
 				success: function (res) {
@@ -247,9 +251,9 @@ define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, al
 			btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
 			$.ajax({
-				url: config.relative_path + '/api/v3/plugins/ai-engine/provision-bot',
+				url: forumPath + '/api/v3/plugins/ai-engine/provision-bot',
 				type: 'POST',
-				headers: { 'x-csrf-token': config.csrf_token },
+				headers: { 'x-csrf-token': csrfHeader },
 				success: function (res) {
 					btn.prop('disabled', false).html('<i class="fa fa-user-plus"></i> Auto-Create');
 					if (res && res.ok && res.botUid) {
