@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mazafard/nodebb-plugin-ai-engine"
+    "url": "https://github.com/Mazafard/nodebb-plugin-ai-engine"
   },
   "keywords": [
     "nodebb",
@@ -24,8 +24,11 @@
     "rag",
     "summarizer"
   ],
-  "author": "mazafard",
+  "author": "Mazafard",
   "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/Mazafard/nodebb-plugin-ai-engine/issues"
+  },
   "nbbpm": {
     "compatibility": "^4.0.0"
   }
