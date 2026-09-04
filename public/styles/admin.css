@@ -1,0 +1,56 @@
+/* Cortex AI Engine - ACP Styling */
+
+.ai-header-card {
+	background: linear-gradient(135deg, #f8f9fc 0%, #eef2f7 100%);
+	border: 1px solid #e3e6ec;
+}
+
+.ai-icon-pulse {
+	width: 54px;
+	height: 54px;
+	border-radius: 16px;
+	background: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+}
+
+.telemetry-pill {
+	background: #ffffff;
+	border: 1px solid #e3e6ec;
+	border-radius: 12px;
+	padding: 8px 16px;
+	text-align: center;
+	min-width: 100px;
+}
+
+.preset-card {
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+	border-color: #e3e6ec !important;
+}
+
+.preset-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+	border-color: #0d6efd !important;
+}
+
+.preset-card.active-preset {
+	border-color: #0d6efd !important;
+	background-color: rgba(13, 110, 253, 0.02);
+	box-shadow: 0 4px 14px rgba(13, 110, 253, 0.12);
+}
+
+.save-bar {
+	position: sticky;
+	bottom: 20px;
+	z-index: 1000;
+	border: 1px solid rgba(0, 0, 0, 0.08) !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.provider-status-badge {
+	font-weight: 500;
+}

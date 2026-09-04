@@ -1,0 +1,32 @@
+{
+  "name": "nodebb-plugin-ai-engine",
+  "version": "1.0.0",
+  "description": "Next-Gen AI Community Engine for NodeBB (Cortex): Smart moderation, RAG-powered first responses, and long-thread TL;DR summarization with Ollama, Gemini, Claude, and OpenAI.",
+  "main": "library.js",
+  "scripts": {
+    "test": "node --check library.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mazafard/nodebb-plugin-ai-engine"
+  },
+  "keywords": [
+    "nodebb",
+    "nodebb-plugin",
+    "ai",
+    "cortex",
+    "llm",
+    "ollama",
+    "gemini",
+    "claude",
+    "openai",
+    "moderation",
+    "rag",
+    "summarizer"
+  ],
+  "author": "mazafard",
+  "license": "BSD-2-Clause",
+  "nbbpm": {
+    "compatibility": "^4.0.0"
+  }
+}
