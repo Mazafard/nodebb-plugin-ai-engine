@@ -13,7 +13,9 @@ class SummarizerTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#summarizerEnabled').is(':checked');
+			$('#card-summarizer').toggleClass('card-disabled', !on);
 			$('#summarizer-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-summarizer').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#summarizerEnabled').on('change', sync);
 		sync();

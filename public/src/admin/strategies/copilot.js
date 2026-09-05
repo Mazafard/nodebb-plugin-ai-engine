@@ -14,7 +14,9 @@ class CopilotTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#copilotEnabled').is(':checked');
+			$('#card-copilot').toggleClass('card-disabled', !on);
 			$('#copilot-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-copilot').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#copilotEnabled').on('change', sync);
 		sync();

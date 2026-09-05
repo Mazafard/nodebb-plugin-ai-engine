@@ -455,6 +455,15 @@ class BaseTabStrategy {
 class OverviewTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { alerts, eventBus } = this.context;
+		const sync = () => {
+			const on = $('#enabled').is(':checked');
+			$('#card-master-overview').toggleClass('card-disabled', !on);
+			$('#master-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-master-overview').find('button:not(.form-check-input)').prop('disabled', !on);
+		};
+		$('#enabled').on('change', sync);
+		sync();
+
 		$('.apply-preset-btn').on('click', function () {
 			const preset = $(this).attr('data-preset');
 			new ApplyPresetCommand(preset, alerts, eventBus).execute();
@@ -475,7 +484,8 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
 			const sync = () => {
 				const on = $(`#${p}Enabled`).is(':checked');
-				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).toggleClass('card-disabled', !on); $(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).find('button:not(.form-check-input)').prop('disabled', !on);
 				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
 			};
 			$(`#${p}Enabled`).on('change', sync);
@@ -501,10 +511,9 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 			const payload = {
 				ollamaUrl: $('#ollamaUrl').val(), ollamaCloudUrl: $('#ollamaCloudUrl').val(),
-				ollamaUseCloud: $('#ollamaUseCloud').is(':checked') ? 'on' : 'off',
-				ollamaApiKey: $('#ollamaApiKey').val(), geminiApiKey: $('#geminiApiKey').val(),
-				anthropicApiKey: $('#anthropicApiKey').val(), openaiApiKey: $('#openaiApiKey').val(),
-				openaiBaseUrl: $('#openaiBaseUrl').val(),
+				ollamaUseCloud: $('#ollamaUseCloud').is(':checked') ? 'on' : 'off', ollamaApiKey: $('#ollamaApiKey').val(),
+				geminiApiKey: $('#geminiApiKey').val(), anthropicApiKey: $('#anthropicApiKey').val(),
+				openaiApiKey: $('#openaiApiKey').val(), openaiBaseUrl: $('#openaiBaseUrl').val(),
 			};
 
 			AsyncButtonDecorator.decorate(btn, async () => {
@@ -566,7 +575,9 @@ class ModerationTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#moderationEnabled').is(':checked');
+			$('#card-moderation').toggleClass('card-disabled', !on);
 			$('#moderation-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-moderation').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#moderationEnabled').on('change', sync);
 		sync();
@@ -646,7 +657,9 @@ class CopilotTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#copilotEnabled').is(':checked');
+			$('#card-copilot').toggleClass('card-disabled', !on);
 			$('#copilot-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-copilot').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#copilotEnabled').on('change', sync);
 		sync();
@@ -700,7 +713,9 @@ class SummarizerTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#summarizerEnabled').is(':checked');
+			$('#card-summarizer').toggleClass('card-disabled', !on);
 			$('#summarizer-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-summarizer').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#summarizerEnabled').on('change', sync);
 		sync();

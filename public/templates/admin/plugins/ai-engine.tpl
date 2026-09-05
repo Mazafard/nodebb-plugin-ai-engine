@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="{config.relative_path}/plugins/nodebb-plugin-ai-engine/static/styles/admin.css">
 <div class="acp-page-container">
 	<div class="row m-0">
 		<div id="ai-engine-admin-container" class="col-12 p-0">
@@ -76,7 +77,7 @@
 
 					<!-- TAB 1: OVERVIEW & PRESETS -->
 					<div class="tab-pane fade show active" id="tab-overview" role="tabpanel">
-						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4">
+						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4" id="card-master-overview">
 							<div class="d-flex justify-content-between align-items-center mb-3">
 								<h5 class="fw-bold mb-0"><i class="fa fa-magic text-primary me-2"></i> 1-Click Operational Presets</h5>
 								<div class="form-check form-switch m-0">
@@ -84,40 +85,42 @@
 									<label class="form-check-label fw-bold" for="enabled">Master AI Engine Switch</label>
 								</div>
 							</div>
-							<p class="text-muted">Select an operational profile to automatically configure provider models and balances:</p>
+							<div class="card-switch-body" id="master-card-body">
+								<p class="text-muted">Select an operational profile to automatically configure provider models and balances:</p>
 
-							<div class="row g-3 mb-4">
-								<div class="col-md-4">
-									<div class="preset-card card h-100 p-3 border-2" data-preset="private">
-										<div class="d-flex justify-content-between align-items-center mb-2">
-											<span class="badge bg-success-subtle text-success border">100% Free & Private</span>
-											<i class="fa fa-server text-success"></i>
+								<div class="row g-3 mb-4">
+									<div class="col-md-4">
+										<div class="preset-card card h-100 p-3 border-2" data-preset="private">
+											<div class="d-flex justify-content-between align-items-center mb-2">
+												<span class="badge bg-success-subtle text-success border">100% Free & Private</span>
+												<i class="fa fa-server text-success"></i>
+											</div>
+											<h6 class="fw-bold mb-1">Local Ollama Sanctuary</h6>
+											<p class="small text-muted mb-3">All moderation, RAG, and summarization runs on local self-hosted models. Zero API bills, complete privacy.</p>
+											<button type="button" class="btn btn-sm btn-outline-success w-100 apply-preset-btn" data-preset="private">Apply Preset</button>
 										</div>
-										<h6 class="fw-bold mb-1">Local Ollama Sanctuary</h6>
-										<p class="small text-muted mb-3">All moderation, RAG, and summarization runs on local self-hosted models. Zero API bills, complete privacy.</p>
-										<button type="button" class="btn btn-sm btn-outline-success w-100 apply-preset-btn" data-preset="private">Apply Preset</button>
 									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="preset-card card h-100 p-3 border-2 active-preset" data-preset="balanced">
-										<div class="d-flex justify-content-between align-items-center mb-2">
-											<span class="badge bg-primary-subtle text-primary border">Recommended</span>
-											<i class="fa fa-balance-scale text-primary"></i>
+									<div class="col-md-4">
+										<div class="preset-card card h-100 p-3 border-2 active-preset" data-preset="balanced">
+											<div class="d-flex justify-content-between align-items-center mb-2">
+												<span class="badge bg-primary-subtle text-primary border">Recommended</span>
+												<i class="fa fa-balance-scale text-primary"></i>
+											</div>
+											<h6 class="fw-bold mb-1">Speed & Cost Champion</h6>
+											<p class="small text-muted mb-3">Ollama for zero-cost moderation triage + Google Gemini 1.5 Flash for lightning-fast sub-second RAG & summaries.</p>
+											<button type="button" class="btn btn-sm btn-outline-primary w-100 apply-preset-btn" data-preset="balanced">Apply Preset</button>
 										</div>
-										<h6 class="fw-bold mb-1">Speed & Cost Champion</h6>
-										<p class="small text-muted mb-3">Ollama for zero-cost moderation triage + Google Gemini 1.5 Flash for lightning-fast sub-second RAG & summaries.</p>
-										<button type="button" class="btn btn-sm btn-outline-primary w-100 apply-preset-btn" data-preset="balanced">Apply Preset</button>
 									</div>
-								</div>
-								<div class="col-md-4">
-									<div class="preset-card card h-100 p-3 border-2" data-preset="enterprise">
-										<div class="d-flex justify-content-between align-items-center mb-2">
-											<span class="badge bg-warning-subtle text-warning border">Frontier Quality</span>
-											<i class="fa fa-crown text-warning"></i>
+									<div class="col-md-4">
+										<div class="preset-card card h-100 p-3 border-2" data-preset="enterprise">
+											<div class="d-flex justify-content-between align-items-center mb-2">
+												<span class="badge bg-warning-subtle text-warning border">Frontier Quality</span>
+												<i class="fa fa-crown text-warning"></i>
+											</div>
+											<h6 class="fw-bold mb-1">Enterprise Synergy</h6>
+											<p class="small text-muted mb-3">GPT-4o-mini for moderation, Gemini Flash for Copilot answers, and Claude 3.5 Sonnet for deep debate synthesis.</p>
+											<button type="button" class="btn btn-sm btn-outline-warning w-100 apply-preset-btn" data-preset="enterprise">Apply Preset</button>
 										</div>
-										<h6 class="fw-bold mb-1">Enterprise Synergy</h6>
-										<p class="small text-muted mb-3">GPT-4o-mini for moderation, Gemini Flash for Copilot answers, and Claude 3.5 Sonnet for deep debate synthesis.</p>
-										<button type="button" class="btn btn-sm btn-outline-warning w-100 apply-preset-btn" data-preset="enterprise">Apply Preset</button>
 									</div>
 								</div>
 							</div>
@@ -129,7 +132,7 @@
 						<div class="row g-4">
 							<!-- Ollama Card -->
 							<div class="col-lg-6">
-								<div class="card shadow-sm p-4 border-0 rounded-4 h-100">
+								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-ollama">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-server fa-lg text-success"></i>
@@ -199,7 +202,7 @@
 
 							<!-- Google Gemini Card -->
 							<div class="col-lg-6">
-								<div class="card shadow-sm p-4 border-0 rounded-4 h-100">
+								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-gemini">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-gem fa-lg text-primary"></i>
@@ -239,7 +242,7 @@
 
 							<!-- Anthropic Card -->
 							<div class="col-lg-6">
-								<div class="card shadow-sm p-4 border-0 rounded-4 h-100">
+								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-anthropic">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-feather-alt fa-lg text-warning"></i>
@@ -279,7 +282,7 @@
 
 							<!-- OpenAI Card -->
 							<div class="col-lg-6">
-								<div class="card shadow-sm p-4 border-0 rounded-4 h-100">
+								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-openai">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-circle-notch fa-lg text-info"></i>
@@ -327,7 +330,7 @@
 
 					<!-- TAB 3: SMART MODERATION GUARD -->
 					<div class="tab-pane fade" id="tab-moderation" role="tabpanel">
-						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4">
+						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4" id="card-moderation">
 							<div class="d-flex justify-content-between align-items-center mb-3">
 								<h5 class="fw-bold mb-0"><i class="fa fa-shield-alt text-danger me-2"></i> Autonomous Post Screening & Quarantine</h5>
 								<div class="form-check form-switch m-0">
@@ -406,7 +409,7 @@
 
 					<!-- TAB 4: COMMUNITY COPILOT -->
 					<div class="tab-pane fade" id="tab-copilot" role="tabpanel">
-						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4">
+						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4" id="card-copilot">
 							<div class="d-flex justify-content-between align-items-center mb-3">
 								<h5 class="fw-bold mb-0"><i class="fa fa-robot text-success me-2"></i> RAG-Powered First Response Bot</h5>
 								<div class="form-check form-switch m-0">
@@ -477,7 +480,7 @@
 
 					<!-- TAB 5: THREAD TL;DR SYNTHESIZER -->
 					<div class="tab-pane fade" id="tab-summarizer" role="tabpanel">
-						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4">
+						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4" id="card-summarizer">
 							<div class="d-flex justify-content-between align-items-center mb-3">
 								<h5 class="fw-bold mb-0"><i class="fa fa-compress-alt text-info me-2"></i> Long-Thread Discussion Summarizer</h5>
 								<div class="form-check form-switch m-0">

@@ -16,7 +16,8 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
 			const sync = () => {
 				const on = $(`#${p}Enabled`).is(':checked');
-				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).toggleClass('card-disabled', !on); $(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).find('button:not(.form-check-input)').prop('disabled', !on);
 				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
 			};
 			$(`#${p}Enabled`).on('change', sync);
@@ -42,10 +43,9 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 			const payload = {
 				ollamaUrl: $('#ollamaUrl').val(), ollamaCloudUrl: $('#ollamaCloudUrl').val(),
-				ollamaUseCloud: $('#ollamaUseCloud').is(':checked') ? 'on' : 'off',
-				ollamaApiKey: $('#ollamaApiKey').val(), geminiApiKey: $('#geminiApiKey').val(),
-				anthropicApiKey: $('#anthropicApiKey').val(), openaiApiKey: $('#openaiApiKey').val(),
-				openaiBaseUrl: $('#openaiBaseUrl').val(),
+				ollamaUseCloud: $('#ollamaUseCloud').is(':checked') ? 'on' : 'off', ollamaApiKey: $('#ollamaApiKey').val(),
+				geminiApiKey: $('#geminiApiKey').val(), anthropicApiKey: $('#anthropicApiKey').val(),
+				openaiApiKey: $('#openaiApiKey').val(), openaiBaseUrl: $('#openaiBaseUrl').val(),
 			};
 
 			AsyncButtonDecorator.decorate(btn, async () => {

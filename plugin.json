@@ -22,6 +22,7 @@
 		"public/client.js"
 	],
 	"css": [
-		"public/styles/client.css"
+		"public/styles/client.css",
+		"public/styles/admin.css"
 	]
 }

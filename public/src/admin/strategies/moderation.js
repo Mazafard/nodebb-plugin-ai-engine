@@ -14,7 +14,9 @@ class ModerationTabStrategy extends BaseTabStrategy {
 
 		const sync = () => {
 			const on = $('#moderationEnabled').is(':checked');
+			$('#card-moderation').toggleClass('card-disabled', !on);
 			$('#moderation-card-body').toggleClass('card-switch-disabled', !on);
+			$('#card-moderation').find('button:not(.form-check-input)').prop('disabled', !on);
 		};
 		$('#moderationEnabled').on('change', sync);
 		sync();
