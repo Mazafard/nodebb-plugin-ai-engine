@@ -4,7 +4,8 @@
   "description": "Next-Gen AI Community Engine for NodeBB (Cortex): Smart moderation, RAG-powered first responses, and long-thread TL;DR summarization with Ollama, Gemini, Claude, and OpenAI.",
   "main": "library.js",
   "scripts": {
-    "test": "node --check library.js",
+    "build": "node scripts/build-admin.js",
+    "test": "node scripts/build-admin.js && node --check library.js",
     "version:patch": "npm version patch",
     "version:minor": "npm version minor",
     "version:major": "npm version major"
