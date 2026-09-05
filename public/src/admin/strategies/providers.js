@@ -22,6 +22,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 			const providerPayload = {
 				ollamaUrl: $('#ollamaUrl').val(),
+				ollamaApiKey: $('#ollamaApiKey').val(),
 				geminiApiKey: $('#geminiApiKey').val(),
 				anthropicApiKey: $('#anthropicApiKey').val(),
 				openaiApiKey: $('#openaiApiKey').val(),

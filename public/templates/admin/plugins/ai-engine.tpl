@@ -133,15 +133,23 @@
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-server fa-lg text-success"></i>
-											<h5 class="fw-bold mb-0">Ollama (Local / Private)</h5>
+											<h5 class="fw-bold mb-0">Ollama (Local & Cloud)</h5>
 										</div>
 										<div class="form-check form-switch m-0">
 											<input class="form-check-input" type="checkbox" id="ollamaEnabled" name="ollamaEnabled" {{{ if settings.ollamaEnabled }}}checked{{{ end }}}>
 										</div>
 									</div>
 									<div class="mb-3">
-										<label class="form-label small fw-bold">Daemon URL</label>
-										<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434">
+										<label class="form-label small fw-bold">Daemon / Cloud Base URL</label>
+										<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434 or https://ollama.your-domain.com">
+										<span class="text-muted" style="font-size: 0.75rem;">Supports local daemons or remote cloud endpoints behind reverse proxies.</span>
+									</div>
+									<div class="mb-3">
+										<label class="form-label small fw-bold">API Key / Bearer Token <span class="text-muted fw-normal">(Optional, for Cloud / Authenticated Gateways)</span></label>
+										<div class="input-group">
+											<input type="password" class="form-control secret-input" id="ollamaApiKey" name="ollamaApiKey" value="{settings.ollamaApiKey}" placeholder="Optional Bearer token or gateway key">
+											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+										</div>
 									</div>
 									<div class="mb-3">
 										<label class="form-label small fw-bold">Default Model</label>
