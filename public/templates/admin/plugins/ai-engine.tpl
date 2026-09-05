@@ -139,28 +139,53 @@
 											<input class="form-check-input" type="checkbox" id="ollamaEnabled" name="ollamaEnabled" {{{ if settings.ollamaEnabled }}}checked{{{ end }}}>
 										</div>
 									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">Daemon / Cloud Base URL</label>
-										<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434 or https://ollama.your-domain.com">
-										<span class="text-muted" style="font-size: 0.75rem;">Supports local daemons or remote cloud endpoints behind reverse proxies.</span>
+
+									<!-- Mode Selector: Local Daemon vs Ollama Cloud -->
+									<div class="p-2 mb-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+										<div>
+											<span class="small fw-bold text-dark d-block"><i class="fa fa-cloud text-primary me-1"></i> Use Ollama Cloud</span>
+											<span class="text-muted" style="font-size: 0.75rem;">Switch from local daemon to hosted cloud endpoint</span>
+										</div>
+										<div class="form-check form-switch m-0">
+											<input class="form-check-input" type="checkbox" id="ollamaUseCloud" name="ollamaUseCloud" {{{ if settings.ollamaUseCloud }}}checked{{{ end }}}>
+										</div>
 									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">API Key / Bearer Token <span class="text-muted fw-normal">(Optional, for Cloud / Authenticated Gateways)</span></label>
+
+									<!-- Local URL Input -->
+									<div class="mb-3 ollama-local-field" id="ollama-local-url-group">
+										<label class="form-label small fw-bold">Local Daemon URL</label>
+										<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434">
+										<span class="text-muted" style="font-size: 0.75rem;">Default localhost daemon. Inside Docker, auto-resolves to host.docker.internal.</span>
+									</div>
+
+									<!-- Cloud Base URL Input -->
+									<div class="mb-3 ollama-cloud-field d-none" id="ollama-cloud-url-group">
+										<label class="form-label small fw-bold">Ollama Cloud Base URL</label>
+										<input type="text" class="form-control" id="ollamaCloudUrl" name="ollamaCloudUrl" value="{settings.ollamaCloudUrl}" placeholder="https://api.ollama.com">
+										<span class="text-muted" style="font-size: 0.75rem;">Hosted Ollama Cloud endpoint or remote GPU gateway.</span>
+									</div>
+
+									<!-- API Key / Bearer Token -->
+									<div class="mb-3" id="ollama-api-key-group">
+										<label class="form-label small fw-bold">API Key / Bearer Token <span class="text-muted fw-normal" id="ollama-api-key-hint">(Required for Cloud, optional for local)</span></label>
 										<div class="input-group">
 											<input type="password" class="form-control secret-input" id="ollamaApiKey" name="ollamaApiKey" value="{settings.ollamaApiKey}" placeholder="Optional Bearer token or gateway key">
 											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
 										</div>
 									</div>
+
+									<!-- Default Model -->
 									<div class="mb-3">
 										<label class="form-label small fw-bold">Default Model</label>
 										<div class="input-group">
 											<input type="text" class="form-control" id="ollamaDefaultModel" name="ollamaDefaultModel" value="{settings.ollamaDefaultModel}" placeholder="llama3.2:3b">
-											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="ollama" title="Query available local models">
+											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="ollama" title="Query available models">
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
 										<div class="model-picker-container mt-2 d-none" id="ollama-model-picker"></div>
 									</div>
+
 									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
 										<span class="provider-status-badge text-muted small" id="ollama-status">Untested</span>
 										<button type="button" class="btn btn-sm btn-outline-success test-provider-btn" data-provider="ollama">
@@ -308,10 +333,10 @@
 								<div class="col-md-6">
 									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="moderationProvider" name="moderationProvider" data-target-picker="#moderation-model-picker" data-target-input="#moderationModel">
-										<option value="ollama" {{{ if settings.moderationProvider === "ollama" }}}selected{{{ end }}}>Ollama (Local / Free)</option>
-										<option value="gemini" {{{ if settings.moderationProvider === "gemini" }}}selected{{{ end }}}>Google Gemini</option>
-										<option value="openai" {{{ if settings.moderationProvider === "openai" }}}selected{{{ end }}}>OpenAI</option>
-										<option value="anthropic" {{{ if settings.moderationProvider === "anthropic" }}}selected{{{ end }}}>Anthropic Claude</option>
+										<option value="ollama">Ollama (Local / Free)</option>
+										<option value="gemini">Google Gemini</option>
+										<option value="openai">OpenAI</option>
+										<option value="anthropic">Anthropic Claude</option>
 									</select>
 								</div>
 								<div class="col-md-6">
@@ -393,10 +418,10 @@
 								<div class="col-md-3">
 									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="copilotProvider" name="copilotProvider" data-target-picker="#copilot-model-picker" data-target-input="#copilotModel">
-										<option value="gemini" {{{ if settings.copilotProvider === "gemini" }}}selected{{{ end }}}>Google Gemini (Recommended)</option>
-										<option value="openai" {{{ if settings.copilotProvider === "openai" }}}selected{{{ end }}}>OpenAI</option>
-										<option value="anthropic" {{{ if settings.copilotProvider === "anthropic" }}}selected{{{ end }}}>Anthropic Claude</option>
-										<option value="ollama" {{{ if settings.copilotProvider === "ollama" }}}selected{{{ end }}}>Ollama (Local)</option>
+										<option value="gemini">Google Gemini (Recommended)</option>
+										<option value="openai">OpenAI</option>
+										<option value="anthropic">Anthropic Claude</option>
+										<option value="ollama">Ollama (Local)</option>
 									</select>
 								</div>
 								<div class="col-md-3">
@@ -462,10 +487,10 @@
 								<div class="col-md-4">
 									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="summarizerProvider" name="summarizerProvider" data-target-picker="#summarizer-model-picker" data-target-input="#summarizerModel">
-										<option value="anthropic" {{{ if settings.summarizerProvider === "anthropic" }}}selected{{{ end }}}>Anthropic Claude (Recommended)</option>
-										<option value="gemini" {{{ if settings.summarizerProvider === "gemini" }}}selected{{{ end }}}>Google Gemini</option>
-										<option value="openai" {{{ if settings.summarizerProvider === "openai" }}}selected{{{ end }}}>OpenAI</option>
-										<option value="ollama" {{{ if settings.summarizerProvider === "ollama" }}}selected{{{ end }}}>Ollama</option>
+										<option value="anthropic">Anthropic Claude (Recommended)</option>
+										<option value="gemini">Google Gemini</option>
+										<option value="openai">OpenAI</option>
+										<option value="ollama">Ollama</option>
 									</select>
 								</div>
 								<div class="col-md-4">
@@ -538,7 +563,7 @@
 											<td><span class="badge bg-secondary-subtle text-secondary border">{../type}</span></td>
 											<td class="small font-monospace">{../model}</td>
 											<td>
-												{{{ if ../verdict === "FLAGGED" }}}
+												{{{ if ../isFlagged }}}
 												<span class="badge bg-danger">FLAGGED</span>
 												{{{ else }}}
 												<span class="badge bg-success">CLEAN</span>

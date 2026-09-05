@@ -64,7 +64,10 @@ class SaveSettingsCommand {
 
 		const formData = {
 			ollamaEnabled: $('#ollamaEnabled').is(':checked'),
+			ollamaUseCloud: $('#ollamaUseCloud').is(':checked'),
 			ollamaUrl: $('#ollamaUrl').val(),
+			ollamaCloudUrl: $('#ollamaCloudUrl').val(),
+			ollamaApiKey: $('#ollamaApiKey').val(),
 			geminiEnabled: $('#geminiEnabled').is(':checked'),
 			geminiApiKey: $('#geminiApiKey').val(),
 			anthropicEnabled: $('#anthropicEnabled').is(':checked'),

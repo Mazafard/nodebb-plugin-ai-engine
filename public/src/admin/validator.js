@@ -20,6 +20,9 @@ class FormValidationHandler {
 
 class SecretInputValidator extends FormValidationHandler {
 	validate(data) {
+		if (data.ollamaEnabled && data.ollamaUseCloud && !data.ollamaApiKey) {
+			return { valid: false, message: 'Ollama Cloud is enabled but API Key / Bearer Token is empty.' };
+		}
 		if (data.geminiEnabled && !data.geminiApiKey) {
 			return { valid: false, message: 'Google Gemini is enabled but API Key is empty.' };
 		}
@@ -35,9 +38,15 @@ class SecretInputValidator extends FormValidationHandler {
 
 class UrlFormatValidator extends FormValidationHandler {
 	validate(data) {
-		if (data.ollamaEnabled && data.ollamaUrl) {
-			if (!data.ollamaUrl.startsWith('http://') && !data.ollamaUrl.startsWith('https://')) {
-				return { valid: false, message: 'Ollama Daemon URL must start with http:// or https://' };
+		if (data.ollamaEnabled) {
+			if (data.ollamaUseCloud && data.ollamaCloudUrl) {
+				if (!data.ollamaCloudUrl.startsWith('http://') && !data.ollamaCloudUrl.startsWith('https://')) {
+					return { valid: false, message: 'Ollama Cloud Base URL must start with https:// or http://' };
+				}
+			} else if (!data.ollamaUseCloud && data.ollamaUrl) {
+				if (!data.ollamaUrl.startsWith('http://') && !data.ollamaUrl.startsWith('https://')) {
+					return { valid: false, message: 'Ollama Daemon URL must start with http:// or https://' };
+				}
 			}
 		}
 		return super.validate(data);

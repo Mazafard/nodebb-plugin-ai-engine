@@ -312,6 +312,9 @@ class FormValidationHandler {
 
 class SecretInputValidator extends FormValidationHandler {
 	validate(data) {
+		if (data.ollamaEnabled && data.ollamaUseCloud && !data.ollamaApiKey) {
+			return { valid: false, message: 'Ollama Cloud is enabled but API Key / Bearer Token is empty.' };
+		}
 		if (data.geminiEnabled && !data.geminiApiKey) {
 			return { valid: false, message: 'Google Gemini is enabled but API Key is empty.' };
 		}
@@ -327,9 +330,15 @@ class SecretInputValidator extends FormValidationHandler {
 
 class UrlFormatValidator extends FormValidationHandler {
 	validate(data) {
-		if (data.ollamaEnabled && data.ollamaUrl) {
-			if (!data.ollamaUrl.startsWith('http://') && !data.ollamaUrl.startsWith('https://')) {
-				return { valid: false, message: 'Ollama Daemon URL must start with http:// or https://' };
+		if (data.ollamaEnabled) {
+			if (data.ollamaUseCloud && data.ollamaCloudUrl) {
+				if (!data.ollamaCloudUrl.startsWith('http://') && !data.ollamaCloudUrl.startsWith('https://')) {
+					return { valid: false, message: 'Ollama Cloud Base URL must start with https:// or http://' };
+				}
+			} else if (!data.ollamaUseCloud && data.ollamaUrl) {
+				if (!data.ollamaUrl.startsWith('http://') && !data.ollamaUrl.startsWith('https://')) {
+					return { valid: false, message: 'Ollama Daemon URL must start with http:// or https://' };
+				}
 			}
 		}
 		return super.validate(data);
@@ -399,7 +408,10 @@ class SaveSettingsCommand {
 
 		const formData = {
 			ollamaEnabled: $('#ollamaEnabled').is(':checked'),
+			ollamaUseCloud: $('#ollamaUseCloud').is(':checked'),
 			ollamaUrl: $('#ollamaUrl').val(),
+			ollamaCloudUrl: $('#ollamaCloudUrl').val(),
+			ollamaApiKey: $('#ollamaApiKey').val(),
 			geminiEnabled: $('#geminiEnabled').is(':checked'),
 			geminiApiKey: $('#geminiApiKey').val(),
 			anthropicEnabled: $('#anthropicEnabled').is(':checked'),
@@ -462,6 +474,16 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, widgetFactory, alerts } = this.context;
 
+		// Dynamic toggle for Ollama Local Daemon vs Ollama Cloud
+		const syncOllamaCloudUI = () => {
+			const isCloud = $('#ollamaUseCloud').is(':checked');
+			$('#ollama-local-url-group').toggleClass('d-none', isCloud);
+			$('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
+			$('#ollama-api-key-hint').text(isCloud ? '(Required for Ollama Cloud)' : '(Optional for local)');
+		};
+		$('#ollamaUseCloud').on('change', syncOllamaCloudUI);
+		syncOllamaCloudUI();
+
 		// Test provider connection
 		$('.test-provider-btn').on('click', function () {
 			const btn = this;
@@ -470,25 +492,22 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 			badge.html(widgetFactory.createStatusBadge('loading', 'Testing...'));
 
-			const providerPayload = {
-				ollamaUrl: $('#ollamaUrl').val(),
-				ollamaApiKey: $('#ollamaApiKey').val(),
-				geminiApiKey: $('#geminiApiKey').val(),
-				anthropicApiKey: $('#anthropicApiKey').val(),
-				openaiApiKey: $('#openaiApiKey').val(),
+			const payload = {
+				ollamaUrl: $('#ollamaUrl').val(), ollamaCloudUrl: $('#ollamaCloudUrl').val(),
+				ollamaUseCloud: $('#ollamaUseCloud').is(':checked') ? 'on' : 'off',
+				ollamaApiKey: $('#ollamaApiKey').val(), geminiApiKey: $('#geminiApiKey').val(),
+				anthropicApiKey: $('#anthropicApiKey').val(), openaiApiKey: $('#openaiApiKey').val(),
 				openaiBaseUrl: $('#openaiBaseUrl').val(),
 			};
 
 			AsyncButtonDecorator.decorate(btn, async () => {
 				try {
-					const res = await apiFacade.testProvider(provider, providerPayload);
+					const res = await apiFacade.testProvider(provider, payload);
 					if (res && res.ok) {
 						badge.html(widgetFactory.createStatusBadge('success', 'Connected', res.latencyMs));
 						alerts.success(`${provider.toUpperCase()} connected successfully! (${res.latencyMs}ms)`);
 						if (res.models && res.models.length) {
-							new ModelPickerBuilder()
-								.forProvider(provider)
-								.withModels(res.models)
+							new ModelPickerBuilder().forProvider(provider).withModels(res.models)
 								.withCurrentValue($(`#${provider}DefaultModel`).val())
 								.withTargetInput(`#${provider}DefaultModel`)
 								.build($(`#${provider}-model-picker`));
@@ -515,21 +534,13 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 					const models = await apiFacade.fetchModels(provider, true);
 					if (models && models.length) {
 						alerts.success(`Found ${models.length} available models for ${provider.toUpperCase()}`);
-						new ModelPickerBuilder()
-							.forProvider(provider)
-							.withModels(models)
+						new ModelPickerBuilder().forProvider(provider).withModels(models)
 							.withCurrentValue(input.val() || models[0])
 							.withTargetInput(`#${input.attr('id')}`)
 							.build($(`#${provider}-model-picker`));
-						if (!input.val()) {
-							input.val(models[0]);
-						}
+						if (!input.val()) input.val(models[0]);
 					} else {
-						alerts.alert({
-							type: 'info',
-							title: 'Model Detection',
-							message: 'No models detected for this provider credentials.',
-						});
+						alerts.alert({ type: 'info', title: 'Model Detection', message: 'No models detected.' });
 					}
 				} catch (err) {
 					alerts.error('Could not auto-detect models: ' + err.message);
@@ -790,7 +801,9 @@ class CortexAdminApp {
 		};
 
 		// 1. Load initial settings
-		settingsModule.load('ai-engine', $('#ai-settings-form'));
+		settingsModule.load('ai-engine', $('#ai-settings-form'), function () {
+			$('#ollamaUseCloud').trigger('change');
+		});
 
 		// 2. Secret inputs toggle
 		$('.toggle-secret-btn').on('click', function () {

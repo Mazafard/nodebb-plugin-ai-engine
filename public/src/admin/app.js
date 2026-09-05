@@ -52,7 +52,9 @@ class CortexAdminApp {
 		};
 
 		// 1. Load initial settings
-		settingsModule.load('ai-engine', $('#ai-settings-form'));
+		settingsModule.load('ai-engine', $('#ai-settings-form'), function () {
+			$('#ollamaUseCloud').trigger('change');
+		});
 
 		// 2. Secret inputs toggle
 		$('.toggle-secret-btn').on('click', function () {
