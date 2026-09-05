@@ -11,6 +11,13 @@ class SummarizerTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { modelProxy } = this.context;
 
+		const sync = () => {
+			const on = $('#summarizerEnabled').is(':checked');
+			$('#summarizer-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#summarizerEnabled').on('change', sync);
+		sync();
+
 		$('#summarizerProvider').on('change', function () {
 			const provider = $(this).val();
 			const targetPicker = $(this).attr('data-target-picker');

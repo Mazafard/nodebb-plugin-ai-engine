@@ -12,6 +12,13 @@ class CopilotTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, modelProxy, alerts } = this.context;
 
+		const sync = () => {
+			const on = $('#copilotEnabled').is(':checked');
+			$('#copilot-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#copilotEnabled').on('change', sync);
+		sync();
+
 		$('#provision-bot-btn').on('click', function () {
 			const btn = this;
 			AsyncButtonDecorator.decorate(btn, async () => {

@@ -12,15 +12,25 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, widgetFactory, alerts } = this.context;
 
-		// Dynamic toggle for Ollama Local Daemon vs Ollama Cloud
-		const syncOllamaCloudUI = () => {
+		// Synchronize card disabled look for all providers
+		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
+			const sync = () => {
+				const on = $(`#${p}Enabled`).is(':checked');
+				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
+			};
+			$(`#${p}Enabled`).on('change', sync);
+			sync();
+		});
+
+		const syncOllamaCloud = () => {
 			const isCloud = $('#ollamaUseCloud').is(':checked');
 			$('#ollama-local-url-group').toggleClass('d-none', isCloud);
 			$('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
 			$('#ollama-api-key-hint').text(isCloud ? '(Required for Ollama Cloud)' : '(Optional for local)');
 		};
-		$('#ollamaUseCloud').on('change', syncOllamaCloudUI);
-		syncOllamaCloudUI();
+		$('#ollamaUseCloud').on('change', syncOllamaCloud);
+		syncOllamaCloud();
 
 		// Test provider connection
 		$('.test-provider-btn').on('click', function () {
@@ -47,8 +57,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						if (res.models && res.models.length) {
 							new ModelPickerBuilder().forProvider(provider).withModels(res.models)
 								.withCurrentValue($(`#${provider}DefaultModel`).val())
-								.withTargetInput(`#${provider}DefaultModel`)
-								.build($(`#${provider}-model-picker`));
+								.withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
 						}
 					} else {
 						badge.html(widgetFactory.createStatusBadge('failed', 'Failed'));
@@ -74,8 +83,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						alerts.success(`Found ${models.length} available models for ${provider.toUpperCase()}`);
 						new ModelPickerBuilder().forProvider(provider).withModels(models)
 							.withCurrentValue(input.val() || models[0])
-							.withTargetInput(`#${input.attr('id')}`)
-							.build($(`#${provider}-model-picker`));
+							.withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
 						if (!input.val()) input.val(models[0]);
 					} else {
 						alerts.alert({ type: 'info', title: 'Model Detection', message: 'No models detected.' });

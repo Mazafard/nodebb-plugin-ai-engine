@@ -140,57 +140,59 @@
 										</div>
 									</div>
 
-									<!-- Mode Selector: Local Daemon vs Ollama Cloud -->
-									<div class="p-2 mb-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
-										<div>
-											<span class="small fw-bold text-dark d-block"><i class="fa fa-cloud text-primary me-1"></i> Use Ollama Cloud</span>
-											<span class="text-muted" style="font-size: 0.75rem;">Switch from local daemon to hosted cloud endpoint</span>
+									<div class="provider-card-body d-flex flex-column flex-grow-1" id="ollama-card-body">
+										<!-- Mode Selector: Local Daemon vs Ollama Cloud -->
+										<div class="p-2 mb-3 bg-light rounded-3 border d-flex justify-content-between align-items-center">
+											<div>
+												<span class="small fw-bold text-dark d-block"><i class="fa fa-cloud text-primary me-1"></i> Use Ollama Cloud</span>
+												<span class="text-muted" style="font-size: 0.75rem;">Switch from local daemon to hosted cloud endpoint</span>
+											</div>
+											<div class="form-check form-switch m-0">
+												<input class="form-check-input" type="checkbox" id="ollamaUseCloud" name="ollamaUseCloud" {{{ if settings.ollamaUseCloud }}}checked{{{ end }}}>
+											</div>
 										</div>
-										<div class="form-check form-switch m-0">
-											<input class="form-check-input" type="checkbox" id="ollamaUseCloud" name="ollamaUseCloud" {{{ if settings.ollamaUseCloud }}}checked{{{ end }}}>
+
+										<!-- Local URL Input -->
+										<div class="mb-3 ollama-local-field" id="ollama-local-url-group">
+											<label class="form-label small fw-bold">Local Daemon URL</label>
+											<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434">
+											<span class="text-muted" style="font-size: 0.75rem;">Default localhost daemon. Inside Docker, auto-resolves to host.docker.internal.</span>
 										</div>
-									</div>
 
-									<!-- Local URL Input -->
-									<div class="mb-3 ollama-local-field" id="ollama-local-url-group">
-										<label class="form-label small fw-bold">Local Daemon URL</label>
-										<input type="text" class="form-control" id="ollamaUrl" name="ollamaUrl" value="{settings.ollamaUrl}" placeholder="http://localhost:11434">
-										<span class="text-muted" style="font-size: 0.75rem;">Default localhost daemon. Inside Docker, auto-resolves to host.docker.internal.</span>
-									</div>
-
-									<!-- Cloud Base URL Input -->
-									<div class="mb-3 ollama-cloud-field d-none" id="ollama-cloud-url-group">
-										<label class="form-label small fw-bold">Ollama Cloud Base URL</label>
-										<input type="text" class="form-control" id="ollamaCloudUrl" name="ollamaCloudUrl" value="{settings.ollamaCloudUrl}" placeholder="https://api.ollama.com">
-										<span class="text-muted" style="font-size: 0.75rem;">Hosted Ollama Cloud endpoint or remote GPU gateway.</span>
-									</div>
-
-									<!-- API Key / Bearer Token -->
-									<div class="mb-3" id="ollama-api-key-group">
-										<label class="form-label small fw-bold">API Key / Bearer Token <span class="text-muted fw-normal" id="ollama-api-key-hint">(Required for Cloud, optional for local)</span></label>
-										<div class="input-group">
-											<input type="password" class="form-control secret-input" id="ollamaApiKey" name="ollamaApiKey" value="{settings.ollamaApiKey}" placeholder="Optional Bearer token or gateway key">
-											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+										<!-- Cloud Base URL Input -->
+										<div class="mb-3 ollama-cloud-field d-none" id="ollama-cloud-url-group">
+											<label class="form-label small fw-bold">Ollama Cloud Base URL</label>
+											<input type="text" class="form-control" id="ollamaCloudUrl" name="ollamaCloudUrl" value="{settings.ollamaCloudUrl}" placeholder="https://api.ollama.com">
+											<span class="text-muted" style="font-size: 0.75rem;">Hosted Ollama Cloud endpoint or remote GPU gateway.</span>
 										</div>
-									</div>
 
-									<!-- Default Model -->
-									<div class="mb-3">
-										<label class="form-label small fw-bold">Default Model</label>
-										<div class="input-group">
-											<input type="text" class="form-control" id="ollamaDefaultModel" name="ollamaDefaultModel" value="{settings.ollamaDefaultModel}" placeholder="llama3.2:3b">
-											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="ollama" title="Query available models">
-												<i class="fa fa-sync-alt"></i> Detect
+										<!-- API Key / Bearer Token -->
+										<div class="mb-3" id="ollama-api-key-group">
+											<label class="form-label small fw-bold">API Key / Bearer Token <span class="text-muted fw-normal" id="ollama-api-key-hint">(Required for Cloud, optional for local)</span></label>
+											<div class="input-group">
+												<input type="password" class="form-control secret-input" id="ollamaApiKey" name="ollamaApiKey" value="{settings.ollamaApiKey}" placeholder="Optional Bearer token or gateway key">
+												<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+											</div>
+										</div>
+
+										<!-- Default Model -->
+										<div class="mb-3">
+											<label class="form-label small fw-bold">Default Model</label>
+											<div class="input-group">
+												<input type="text" class="form-control" id="ollamaDefaultModel" name="ollamaDefaultModel" value="{settings.ollamaDefaultModel}" placeholder="llama3.2:3b">
+												<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="ollama" title="Query available models">
+													<i class="fa fa-sync-alt"></i> Detect
+												</button>
+											</div>
+											<div class="model-picker-container mt-2 d-none" id="ollama-model-picker"></div>
+										</div>
+
+										<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+											<span class="provider-status-badge text-muted small" id="ollama-status">Untested</span>
+											<button type="button" class="btn btn-sm btn-outline-success test-provider-btn" data-provider="ollama">
+												<i class="fa fa-plug me-1"></i> Test Connection
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="ollama-model-picker"></div>
-									</div>
-
-									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
-										<span class="provider-status-badge text-muted small" id="ollama-status">Untested</span>
-										<button type="button" class="btn btn-sm btn-outline-success test-provider-btn" data-provider="ollama">
-											<i class="fa fa-plug me-1"></i> Test Connection
-										</button>
 									</div>
 								</div>
 							</div>
@@ -207,28 +209,30 @@
 											<input class="form-check-input" type="checkbox" id="geminiEnabled" name="geminiEnabled" {{{ if settings.geminiEnabled }}}checked{{{ end }}}>
 										</div>
 									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">API Key</label>
-										<div class="input-group">
-											<input type="password" class="form-control secret-input" id="geminiApiKey" name="geminiApiKey" value="{settings.geminiApiKey}" placeholder="AIzaSy...">
-											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+									<div class="provider-card-body d-flex flex-column flex-grow-1" id="gemini-card-body">
+										<div class="mb-3">
+											<label class="form-label small fw-bold">API Key</label>
+											<div class="input-group">
+												<input type="password" class="form-control secret-input" id="geminiApiKey" name="geminiApiKey" value="{settings.geminiApiKey}" placeholder="AIzaSy...">
+												<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+											</div>
 										</div>
-									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">Default Model</label>
-										<div class="input-group">
-											<input type="text" class="form-control" id="geminiDefaultModel" name="geminiDefaultModel" value="{settings.geminiDefaultModel}" placeholder="gemini-1.5-flash">
-											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="gemini">
-												<i class="fa fa-sync-alt"></i> Detect
+										<div class="mb-3">
+											<label class="form-label small fw-bold">Default Model</label>
+											<div class="input-group">
+												<input type="text" class="form-control" id="geminiDefaultModel" name="geminiDefaultModel" value="{settings.geminiDefaultModel}" placeholder="gemini-1.5-flash">
+												<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="gemini">
+													<i class="fa fa-sync-alt"></i> Detect
+												</button>
+											</div>
+											<div class="model-picker-container mt-2 d-none" id="gemini-model-picker"></div>
+										</div>
+										<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+											<span class="provider-status-badge text-muted small" id="gemini-status">Untested</span>
+											<button type="button" class="btn btn-sm btn-outline-primary test-provider-btn" data-provider="gemini">
+												<i class="fa fa-plug me-1"></i> Test Connection
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="gemini-model-picker"></div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
-										<span class="provider-status-badge text-muted small" id="gemini-status">Untested</span>
-										<button type="button" class="btn btn-sm btn-outline-primary test-provider-btn" data-provider="gemini">
-											<i class="fa fa-plug me-1"></i> Test Connection
-										</button>
 									</div>
 								</div>
 							</div>
@@ -245,28 +249,30 @@
 											<input class="form-check-input" type="checkbox" id="anthropicEnabled" name="anthropicEnabled" {{{ if settings.anthropicEnabled }}}checked{{{ end }}}>
 										</div>
 									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">API Key</label>
-										<div class="input-group">
-											<input type="password" class="form-control secret-input" id="anthropicApiKey" name="anthropicApiKey" value="{settings.anthropicApiKey}" placeholder="sk-ant-...">
-											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+									<div class="provider-card-body d-flex flex-column flex-grow-1" id="anthropic-card-body">
+										<div class="mb-3">
+											<label class="form-label small fw-bold">API Key</label>
+											<div class="input-group">
+												<input type="password" class="form-control secret-input" id="anthropicApiKey" name="anthropicApiKey" value="{settings.anthropicApiKey}" placeholder="sk-ant-...">
+												<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
+											</div>
 										</div>
-									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">Default Model</label>
-										<div class="input-group">
-											<input type="text" class="form-control" id="anthropicDefaultModel" name="anthropicDefaultModel" value="{settings.anthropicDefaultModel}" placeholder="claude-3-5-sonnet-20241022">
-											<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="anthropic">
-												<i class="fa fa-sync-alt"></i> Detect
+										<div class="mb-3">
+											<label class="form-label small fw-bold">Default Model</label>
+											<div class="input-group">
+												<input type="text" class="form-control" id="anthropicDefaultModel" name="anthropicDefaultModel" value="{settings.anthropicDefaultModel}" placeholder="claude-3-5-sonnet-20241022">
+												<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="anthropic">
+													<i class="fa fa-sync-alt"></i> Detect
+												</button>
+											</div>
+											<div class="model-picker-container mt-2 d-none" id="anthropic-model-picker"></div>
+										</div>
+										<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+											<span class="provider-status-badge text-muted small" id="anthropic-status">Untested</span>
+											<button type="button" class="btn btn-sm btn-outline-warning test-provider-btn" data-provider="anthropic">
+												<i class="fa fa-plug me-1"></i> Test Connection
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="anthropic-model-picker"></div>
-									</div>
-									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
-										<span class="provider-status-badge text-muted small" id="anthropic-status">Untested</span>
-										<button type="button" class="btn btn-sm btn-outline-warning test-provider-btn" data-provider="anthropic">
-											<i class="fa fa-plug me-1"></i> Test Connection
-										</button>
 									</div>
 								</div>
 							</div>
@@ -283,34 +289,36 @@
 											<input class="form-check-input" type="checkbox" id="openaiEnabled" name="openaiEnabled" {{{ if settings.openaiEnabled }}}checked{{{ end }}}>
 										</div>
 									</div>
-									<div class="mb-3">
-										<label class="form-label small fw-bold">API Key</label>
-										<div class="input-group">
-											<input type="password" class="form-control secret-input" id="openaiApiKey" name="openaiApiKey" value="{settings.openaiApiKey}" placeholder="sk-proj-...">
-											<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
-										</div>
-									</div>
-									<div class="row g-2 mb-2">
-										<div class="col-8">
-											<label class="form-label small fw-bold">Base URL</label>
-											<input type="text" class="form-control" id="openaiBaseUrl" name="openaiBaseUrl" value="{settings.openaiBaseUrl}" placeholder="https://api.openai.com/v1">
-										</div>
-										<div class="col-4">
-											<label class="form-label small fw-bold">Default Model</label>
+									<div class="provider-card-body d-flex flex-column flex-grow-1" id="openai-card-body">
+										<div class="mb-3">
+											<label class="form-label small fw-bold">API Key</label>
 											<div class="input-group">
-												<input type="text" class="form-control" id="openaiDefaultModel" name="openaiDefaultModel" value="{settings.openaiDefaultModel}" placeholder="gpt-4o-mini">
-												<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="openai">
-													<i class="fa fa-sync-alt"></i> Detect
-												</button>
+												<input type="password" class="form-control secret-input" id="openaiApiKey" name="openaiApiKey" value="{settings.openaiApiKey}" placeholder="sk-proj-...">
+												<button class="btn btn-outline-secondary toggle-secret-btn" type="button"><i class="fa fa-eye"></i></button>
 											</div>
 										</div>
-									</div>
-									<div class="model-picker-container mb-3 d-none" id="openai-model-picker"></div>
-									<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
-										<span class="provider-status-badge text-muted small" id="openai-status">Untested</span>
-										<button type="button" class="btn btn-sm btn-outline-info test-provider-btn" data-provider="openai">
-											<i class="fa fa-plug me-1"></i> Test Connection
-										</button>
+										<div class="row g-2 mb-2">
+											<div class="col-8">
+												<label class="form-label small fw-bold">Base URL</label>
+												<input type="text" class="form-control" id="openaiBaseUrl" name="openaiBaseUrl" value="{settings.openaiBaseUrl}" placeholder="https://api.openai.com/v1">
+											</div>
+											<div class="col-4">
+												<label class="form-label small fw-bold">Default Model</label>
+												<div class="input-group">
+													<input type="text" class="form-control" id="openaiDefaultModel" name="openaiDefaultModel" value="{settings.openaiDefaultModel}" placeholder="gpt-4o-mini">
+													<button class="btn btn-outline-secondary auto-detect-btn" type="button" data-provider="openai">
+														<i class="fa fa-sync-alt"></i> Detect
+													</button>
+												</div>
+											</div>
+										</div>
+										<div class="model-picker-container mb-3 d-none" id="openai-model-picker"></div>
+										<div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+											<span class="provider-status-badge text-muted small" id="openai-status">Untested</span>
+											<button type="button" class="btn btn-sm btn-outline-info test-provider-btn" data-provider="openai">
+												<i class="fa fa-plug me-1"></i> Test Connection
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -327,76 +335,70 @@
 									<label class="form-check-label fw-semibold" for="moderationEnabled">Enable Guard</label>
 								</div>
 							</div>
-							<p class="text-muted small">Scans submissions on <code>filter:post.save</code> for deceptive link farming, aggressive promo, and toxicity.</p>
+							<div class="card-switch-body" id="moderation-card-body">
+								<p class="text-muted small">Scans submissions on <code>filter:post.save</code> for deceptive link farming, aggressive promo, and toxicity.</p>
 
-							<div class="row g-3 mb-4">
-								<div class="col-md-6">
-									<label class="form-label small fw-bold">Provider</label>
-									<select class="form-select provider-selector" id="moderationProvider" name="moderationProvider" data-target-picker="#moderation-model-picker" data-target-input="#moderationModel">
-										<option value="ollama">Ollama (Local / Free)</option>
-										<option value="gemini">Google Gemini</option>
-										<option value="openai">OpenAI</option>
-										<option value="anthropic">Anthropic Claude</option>
-									</select>
-								</div>
-								<div class="col-md-6">
-									<label class="form-label small fw-bold">Model Override</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="moderationModel" name="moderationModel" value="{settings.moderationModel}" placeholder="Leave blank for provider default">
-										<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#moderationProvider" data-target-input="#moderationModel" data-target-picker="#moderation-model-picker">
-											<i class="fa fa-sync-alt"></i> Detect
-										</button>
+								<div class="row g-3 mb-4">
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Provider</label>
+										<select class="form-select provider-selector" id="moderationProvider" name="moderationProvider" data-target-picker="#moderation-model-picker" data-target-input="#moderationModel">
+											<option value="ollama">Ollama (Local / Free)</option>
+											<option value="gemini">Google Gemini</option>
+											<option value="openai">OpenAI</option>
+											<option value="anthropic">Anthropic Claude</option>
+										</select>
 									</div>
-									<div class="model-picker-container mt-2 d-none" id="moderation-model-picker"></div>
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Model Override</label>
+										<div class="input-group">
+											<input type="text" class="form-control" id="moderationModel" name="moderationModel" value="{settings.moderationModel}" placeholder="Leave blank for provider default">
+											<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#moderationProvider" data-target-input="#moderationModel" data-target-picker="#moderation-model-picker">
+												<i class="fa fa-sync-alt"></i> Detect
+											</button>
+										</div>
+										<div class="model-picker-container mt-2 d-none" id="moderation-model-picker"></div>
+									</div>
 								</div>
-							</div>
 
-							<!-- Sensitivity Slider -->
-							<div class="mb-4">
-								<div class="d-flex justify-content-between align-items-center mb-1">
-									<label class="form-label small fw-bold mb-0">Sensitivity Threshold</label>
-									<span class="badge bg-primary fs-6" id="sensitivity-display">{settings.moderationSensitivity}%</span>
+								<div class="row g-3 mb-4">
+									<div class="col-md-4">
+										<label class="form-label small fw-bold d-flex justify-content-between">
+											<span>Sensitivity Threshold</span>
+											<span class="text-danger fw-bold" id="sensitivity-display">{settings.moderationSensitivity}%</span>
+										</label>
+										<input type="range" class="form-range" id="moderationSensitivity" name="moderationSensitivity" min="10" max="95" step="5" value="{settings.moderationSensitivity}">
+									</div>
+									<div class="col-md-4">
+										<label class="form-label small fw-bold">Quarantine Action</label>
+										<select class="form-select" id="moderationAction" name="moderationAction">
+											<option value="queue">Send to NodeBB Moderation Queue</option>
+											<option value="flag">Publish & Create Staff Flag</option>
+											<option value="reject">Reject Post Immediately</option>
+										</select>
+									</div>
+									<div class="col-md-4">
+										<label class="form-label small fw-bold">Bypass Minimum Reputation</label>
+										<input type="number" class="form-control" id="moderationMinReputation" name="moderationMinReputation" value="{settings.moderationMinReputation}">
+									</div>
+									<div class="col-md-4">
+										<label class="form-label small fw-bold">Bypass Minimum Posts</label>
+										<input type="number" class="form-control" id="moderationMinPosts" name="moderationMinPosts" value="{settings.moderationMinPosts}">
+									</div>
 								</div>
-								<input type="range" class="form-range" min="10" max="95" step="5" id="moderationSensitivity" name="moderationSensitivity" value="{settings.moderationSensitivity}">
-								<div class="d-flex justify-content-between text-muted small">
-									<span>10% (Permissive)</span>
-									<span>50% (Balanced)</span>
-									<span>95% (Aggressive Strict)</span>
-								</div>
-							</div>
 
-							<!-- Action & Exemption Rules -->
-							<div class="row g-3 mb-4">
-								<div class="col-md-4">
-									<label class="form-label small fw-bold">Action on Violation</label>
-									<select class="form-select" id="moderationAction" name="moderationAction">
-										<option value="queue" {{{ if settings.moderationAction === "queue" }}}selected{{{ end }}}>Send to NodeBB Moderation Queue</option>
-										<option value="flag" {{{ if settings.moderationAction === "flag" }}}selected{{{ end }}}>Publish & Create Staff Flag</option>
-										<option value="reject" {{{ if settings.moderationAction === "reject" }}}selected{{{ end }}}>Reject Post Immediately</option>
-									</select>
-								</div>
-								<div class="col-md-4">
-									<label class="form-label small fw-bold">Bypass Minimum Reputation</label>
-									<input type="number" class="form-control" id="moderationMinReputation" name="moderationMinReputation" value="{settings.moderationMinReputation}">
-								</div>
-								<div class="col-md-4">
-									<label class="form-label small fw-bold">Bypass Minimum Posts</label>
-									<input type="number" class="form-control" id="moderationMinPosts" name="moderationMinPosts" value="{settings.moderationMinPosts}">
-								</div>
-							</div>
-
-							<!-- 🧪 INTERACTIVE MODERATION SANDBOX -->
-							<div class="sandbox-box p-3 rounded-3 border bg-light mt-3">
-								<h6 class="fw-bold mb-2"><i class="fa fa-vial text-info me-2"></i> Interactive Moderation Sandbox</h6>
-								<p class="small text-muted mb-2">Simulate real-time AI scanning on sample text without affecting any forum posts:</p>
-								<div class="mb-2">
-									<textarea class="form-control font-monospace small" id="sandbox-input" rows="3" placeholder="Paste test message or promotional link farming spam here..."></textarea>
-								</div>
-								<div class="d-flex justify-content-between align-items-center">
-									<button type="button" class="btn btn-sm btn-info text-white" id="run-sandbox-btn">
-										<i class="fa fa-play me-1"></i> Simulate AI Scan
-									</button>
-									<div id="sandbox-result" class="small fw-semibold"></div>
+								<!-- 🧪 INTERACTIVE MODERATION SANDBOX -->
+								<div class="sandbox-box p-3 rounded-3 border bg-light mt-3">
+									<h6 class="fw-bold mb-2"><i class="fa fa-vial text-info me-2"></i> Interactive Moderation Sandbox</h6>
+									<p class="small text-muted mb-2">Simulate real-time AI scanning on sample text without affecting any forum posts:</p>
+									<div class="mb-2">
+										<textarea class="form-control font-monospace small" id="sandbox-input" rows="3" placeholder="Paste test message or promotional link farming spam here..."></textarea>
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<button type="button" class="btn btn-sm btn-info text-white" id="run-sandbox-btn">
+											<i class="fa fa-play me-1"></i> Simulate AI Scan
+										</button>
+										<div id="sandbox-result" class="small fw-semibold"></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -412,61 +414,63 @@
 									<label class="form-check-label fw-semibold" for="copilotEnabled">Enable Copilot</label>
 								</div>
 							</div>
-							<p class="text-muted small">Automatically analyzes new questions, searches solved forum discussions, and drafts an authoritative first reply.</p>
+							<div class="card-switch-body" id="copilot-card-body">
+								<p class="text-muted small">Automatically analyzes new questions, searches solved forum discussions, and drafts an authoritative first reply.</p>
 
-							<div class="row g-3 mb-4">
-								<div class="col-md-3">
-									<label class="form-label small fw-bold">Provider</label>
-									<select class="form-select provider-selector" id="copilotProvider" name="copilotProvider" data-target-picker="#copilot-model-picker" data-target-input="#copilotModel">
-										<option value="gemini">Google Gemini (Recommended)</option>
-										<option value="openai">OpenAI</option>
-										<option value="anthropic">Anthropic Claude</option>
-										<option value="ollama">Ollama (Local)</option>
-									</select>
-								</div>
-								<div class="col-md-3">
-									<label class="form-label small fw-bold">Model Override</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="copilotModel" name="copilotModel" value="{settings.copilotModel}" placeholder="Leave blank for provider default">
-										<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#copilotProvider" data-target-input="#copilotModel" data-target-picker="#copilot-model-picker">
-											<i class="fa fa-sync-alt"></i> Detect
-										</button>
+								<div class="row g-3 mb-4">
+									<div class="col-md-3">
+										<label class="form-label small fw-bold">Provider</label>
+										<select class="form-select provider-selector" id="copilotProvider" name="copilotProvider" data-target-picker="#copilot-model-picker" data-target-input="#copilotModel">
+											<option value="gemini">Google Gemini (Recommended)</option>
+											<option value="openai">OpenAI</option>
+											<option value="anthropic">Anthropic Claude</option>
+											<option value="ollama">Ollama (Local)</option>
+										</select>
 									</div>
-									<div class="model-picker-container mt-2 d-none" id="copilot-model-picker"></div>
-								</div>
-								<div class="col-md-3">
-									<label class="form-label small fw-bold">Bot User UID</label>
-									<div class="input-group">
-										<input type="number" class="form-control" id="copilotBotUid" name="copilotBotUid" value="{settings.copilotBotUid}">
-										<button class="btn btn-outline-secondary" type="button" id="provision-bot-btn" title="Auto-create dedicated Cortex Bot account">
-											<i class="fa fa-user-plus"></i> Auto-Create
-										</button>
+									<div class="col-md-3">
+										<label class="form-label small fw-bold">Model Override</label>
+										<div class="input-group">
+											<input type="text" class="form-control" id="copilotModel" name="copilotModel" value="{settings.copilotModel}" placeholder="Leave blank for provider default">
+											<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#copilotProvider" data-target-input="#copilotModel" data-target-picker="#copilot-model-picker">
+												<i class="fa fa-sync-alt"></i> Detect
+											</button>
+										</div>
+										<div class="model-picker-container mt-2 d-none" id="copilot-model-picker"></div>
+									</div>
+									<div class="col-md-3">
+										<label class="form-label small fw-bold">Bot User UID</label>
+										<div class="input-group">
+											<input type="number" class="form-control" id="copilotBotUid" name="copilotBotUid" value="{settings.copilotBotUid}">
+											<button class="btn btn-outline-secondary" type="button" id="provision-bot-btn" title="Auto-create dedicated Cortex Bot account">
+												<i class="fa fa-user-plus"></i> Auto-Create
+											</button>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<label class="form-label small fw-bold">Reply Delay (Seconds)</label>
+										<input type="number" class="form-control" id="copilotDelaySeconds" name="copilotDelaySeconds" value="{settings.copilotDelaySeconds}" min="1" max="120">
 									</div>
 								</div>
-								<div class="col-md-3">
-									<label class="form-label small fw-bold">Reply Delay (Seconds)</label>
-									<input type="number" class="form-control" id="copilotDelaySeconds" name="copilotDelaySeconds" value="{settings.copilotDelaySeconds}" min="1" max="120">
-								</div>
-							</div>
 
-							<!-- Category Whitelist -->
-							<div class="mb-4">
-								<label class="form-label small fw-bold">Allowed Categories for AI Answers</label>
-								<p class="small text-muted mb-2">Check the categories where the bot is permitted to post answers:</p>
-								<div class="category-selector-box p-3 rounded-3 border bg-light" style="max-height: 200px; overflow-y: auto;">
-									{{{ each categories }}}
-									<div class="form-check">
-										<input class="form-check-input category-checkbox" type="checkbox" value="{../cid}" id="cat-{../cid}" {{{ if ../selected }}}checked{{{ end }}}>
-										<label class="form-check-label small" for="cat-{../cid}">{../name}</label>
+								<!-- Category Whitelist -->
+								<div class="mb-4">
+									<label class="form-label small fw-bold">Allowed Categories for AI Answers</label>
+									<p class="small text-muted mb-2">Check the categories where the bot is permitted to post answers:</p>
+									<div class="category-selector-box p-3 rounded-3 border bg-light" style="max-height: 200px; overflow-y: auto;">
+										{{{ each categories }}}
+										<div class="form-check">
+											<input class="form-check-input category-checkbox" type="checkbox" value="{../cid}" id="cat-{../cid}" {{{ if ../selected }}}checked{{{ end }}}>
+											<label class="form-check-label small" for="cat-{../cid}">{../name}</label>
+										</div>
+										{{{ end }}}
 									</div>
-									{{{ end }}}
+									<input type="hidden" id="copilotCategories" name="copilotCategories" value="{settings.copilotCategories}">
 								</div>
-								<input type="hidden" id="copilotCategories" name="copilotCategories" value="{settings.copilotCategories}">
-							</div>
 
-							<div class="mb-3">
-								<label class="form-label small fw-bold">Custom Community Prompt Guidelines</label>
-								<textarea class="form-control small" id="copilotCustomPrompt" name="copilotCustomPrompt" rows="2" placeholder="e.g. Always emphasize checking our official documentation at docs.example.com">{settings.copilotCustomPrompt}</textarea>
+								<div class="mb-3">
+									<label class="form-label small fw-bold">Custom Community Prompt Guidelines</label>
+									<textarea class="form-control small" id="copilotCustomPrompt" name="copilotCustomPrompt" rows="2" placeholder="e.g. Always emphasize checking our official documentation at docs.example.com">{settings.copilotCustomPrompt}</textarea>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -481,53 +485,55 @@
 									<label class="form-check-label fw-semibold" for="summarizerEnabled">Enable Summarizer</label>
 								</div>
 							</div>
-							<p class="text-muted small">Generates a neat, cached consensus card at the head of multi-page discussions, saving members from reading hundreds of posts.</p>
+							<div class="card-switch-body" id="summarizer-card-body">
+								<p class="text-muted small">Generates a neat, cached consensus card at the head of multi-page discussions, saving members from reading hundreds of posts.</p>
 
-							<div class="row g-3 mb-4">
-								<div class="col-md-4">
-									<label class="form-label small fw-bold">Provider</label>
-									<select class="form-select provider-selector" id="summarizerProvider" name="summarizerProvider" data-target-picker="#summarizer-model-picker" data-target-input="#summarizerModel">
-										<option value="anthropic">Anthropic Claude (Recommended)</option>
-										<option value="gemini">Google Gemini</option>
-										<option value="openai">OpenAI</option>
-										<option value="ollama">Ollama</option>
-									</select>
-								</div>
-								<div class="col-md-4">
-									<label class="form-label small fw-bold">Model Override</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="summarizerModel" name="summarizerModel" value="{settings.summarizerModel}" placeholder="Leave blank for provider default">
-										<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#summarizerProvider" data-target-input="#summarizerModel" data-target-picker="#summarizer-model-picker">
-											<i class="fa fa-sync-alt"></i> Detect
-										</button>
+								<div class="row g-3 mb-4">
+									<div class="col-md-4">
+										<label class="form-label small fw-bold">Provider</label>
+										<select class="form-select provider-selector" id="summarizerProvider" name="summarizerProvider" data-target-picker="#summarizer-model-picker" data-target-input="#summarizerModel">
+											<option value="anthropic">Anthropic Claude (Recommended)</option>
+											<option value="gemini">Google Gemini</option>
+											<option value="openai">OpenAI</option>
+											<option value="ollama">Ollama</option>
+										</select>
 									</div>
-									<div class="model-picker-container mt-2 d-none" id="summarizer-model-picker"></div>
+									<div class="col-md-4">
+										<label class="form-label small fw-bold">Model Override</label>
+										<div class="input-group">
+											<input type="text" class="form-control" id="summarizerModel" name="summarizerModel" value="{settings.summarizerModel}" placeholder="Leave blank for provider default">
+											<button class="btn btn-outline-secondary tab-detect-btn" type="button" data-provider-select="#summarizerProvider" data-target-input="#summarizerModel" data-target-picker="#summarizer-model-picker">
+												<i class="fa fa-sync-alt"></i> Detect
+											</button>
+										</div>
+										<div class="model-picker-container mt-2 d-none" id="summarizer-model-picker"></div>
+									</div>
+									<div class="col-md-2">
+										<label class="form-label small fw-bold">Min Posts</label>
+										<input type="number" class="form-control" id="summarizerMinPosts" name="summarizerMinPosts" value="{settings.summarizerMinPosts}" min="5">
+									</div>
+									<div class="col-md-2">
+										<label class="form-label small fw-bold">Re-summarize Delta</label>
+										<input type="number" class="form-control" id="summarizerUpdateInterval" name="summarizerUpdateInterval" value="{settings.summarizerUpdateInterval}" min="5">
+									</div>
 								</div>
-								<div class="col-md-2">
-									<label class="form-label small fw-bold">Min Posts</label>
-									<input type="number" class="form-control" id="summarizerMinPosts" name="summarizerMinPosts" value="{settings.summarizerMinPosts}" min="5">
-								</div>
-								<div class="col-md-2">
-									<label class="form-label small fw-bold">Re-summarize Delta</label>
-									<input type="number" class="form-control" id="summarizerUpdateInterval" name="summarizerUpdateInterval" value="{settings.summarizerUpdateInterval}" min="5">
-								</div>
-							</div>
 
-							<!-- Live Preview of Topic Card -->
-							<h6 class="fw-bold mb-2">Frontend Appearance Preview</h6>
-							<div class="ai-summary-card p-3 rounded-3 border mb-3">
-								<div class="d-flex align-items-center justify-content-between mb-2">
-									<div class="d-flex align-items-center gap-2">
-										<span class="badge bg-primary-subtle text-primary border"><i class="fa fa-brain me-1"></i> Thread TL;DR</span>
-										<span class="text-muted small">Consensus reached</span>
+								<!-- Live Preview of Topic Card -->
+								<h6 class="fw-bold mb-2">Frontend Appearance Preview</h6>
+								<div class="ai-summary-card p-3 rounded-3 border mb-3">
+									<div class="d-flex align-items-center justify-content-between mb-2">
+										<div class="d-flex align-items-center gap-2">
+											<span class="badge bg-primary-subtle text-primary border"><i class="fa fa-brain me-1"></i> Thread TL;DR</span>
+											<span class="text-muted small">Consensus reached</span>
+										</div>
+										<span class="badge bg-light text-secondary border">Updated Just Now</span>
 									</div>
-									<span class="badge bg-light text-secondary border">Updated Just Now</span>
+									<p class="mb-2 small fw-semibold">The community verified that setting Redis cluster bus ports to 16379 in the firewall resolved quorum formation across all master nodes.</p>
+									<ul class="mb-0 small text-muted ps-3">
+										<li>Ubuntu 24.04 requires explicit UFW port allow rules for node-to-node cluster bus.</li>
+										<li>Single master topology should be avoided for production clusters.</li>
+									</ul>
 								</div>
-								<p class="mb-2 small fw-semibold">The community verified that setting Redis cluster bus ports to 16379 in the firewall resolved quorum formation across all master nodes.</p>
-								<ul class="mb-0 small text-muted ps-3">
-									<li>Ubuntu 24.04 requires explicit UFW port allow rules for node-to-node cluster bus.</li>
-									<li>Single master topology should be avoided for production clusters.</li>
-								</ul>
 							</div>
 						</div>
 					</div>

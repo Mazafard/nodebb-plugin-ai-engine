@@ -12,6 +12,13 @@ class ModerationTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, modelProxy, alerts } = this.context;
 
+		const sync = () => {
+			const on = $('#moderationEnabled').is(':checked');
+			$('#moderation-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#moderationEnabled').on('change', sync);
+		sync();
+
 		$('#moderationSensitivity').on('input', function () {
 			$('#sensitivity-display').text($(this).val() + '%');
 		});

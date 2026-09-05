@@ -15,22 +15,19 @@ class ApplyPresetCommand {
 
 	execute() {
 		if (this.preset === 'private') {
-			$('#ollamaEnabled').prop('checked', true);
-			$('#moderationProvider').val('ollama').trigger('change');
-			$('#copilotProvider').val('ollama').trigger('change');
-			$('#summarizerProvider').val('ollama').trigger('change');
+			$('#ollamaEnabled').prop('checked', true).trigger('change');
+			$('#geminiEnabled, #anthropicEnabled, #openaiEnabled').prop('checked', false).trigger('change');
+			$('#moderationProvider, #copilotProvider, #summarizerProvider').val('ollama').trigger('change');
 			this.alerts.success('Applied "100% Free & Private" (Ollama Local) preset! Click Save Changes to apply.');
 		} else if (this.preset === 'balanced') {
-			$('#ollamaEnabled').prop('checked', true);
-			$('#geminiEnabled').prop('checked', true);
+			$('#ollamaEnabled, #geminiEnabled').prop('checked', true).trigger('change');
+			$('#anthropicEnabled, #openaiEnabled').prop('checked', false).trigger('change');
 			$('#moderationProvider').val('ollama').trigger('change');
-			$('#copilotProvider').val('gemini').trigger('change');
-			$('#summarizerProvider').val('gemini').trigger('change');
+			$('#copilotProvider, #summarizerProvider').val('gemini').trigger('change');
 			this.alerts.success('Applied "Speed & Cost Champion" preset! Click Save Changes to apply.');
 		} else if (this.preset === 'enterprise') {
-			$('#openaiEnabled').prop('checked', true);
-			$('#geminiEnabled').prop('checked', true);
-			$('#anthropicEnabled').prop('checked', true);
+			$('#ollamaEnabled').prop('checked', false).trigger('change');
+			$('#openaiEnabled, #geminiEnabled, #anthropicEnabled').prop('checked', true).trigger('change');
 			$('#moderationProvider').val('openai').trigger('change');
 			$('#copilotProvider').val('gemini').trigger('change');
 			$('#summarizerProvider').val('anthropic').trigger('change');

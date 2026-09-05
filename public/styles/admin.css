@@ -64,3 +64,11 @@
 .model-select-pill:hover {
 	transform: translateY(-1px);
 }
+
+.card-switch-disabled {
+	opacity: 0.4 !important;
+	pointer-events: none !important;
+	filter: grayscale(35%) !important;
+	user-select: none !important;
+	transition: opacity 0.2s ease, filter 0.2s ease;
+}

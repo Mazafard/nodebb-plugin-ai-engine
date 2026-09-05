@@ -359,22 +359,19 @@ class ApplyPresetCommand {
 
 	execute() {
 		if (this.preset === 'private') {
-			$('#ollamaEnabled').prop('checked', true);
-			$('#moderationProvider').val('ollama').trigger('change');
-			$('#copilotProvider').val('ollama').trigger('change');
-			$('#summarizerProvider').val('ollama').trigger('change');
+			$('#ollamaEnabled').prop('checked', true).trigger('change');
+			$('#geminiEnabled, #anthropicEnabled, #openaiEnabled').prop('checked', false).trigger('change');
+			$('#moderationProvider, #copilotProvider, #summarizerProvider').val('ollama').trigger('change');
 			this.alerts.success('Applied "100% Free & Private" (Ollama Local) preset! Click Save Changes to apply.');
 		} else if (this.preset === 'balanced') {
-			$('#ollamaEnabled').prop('checked', true);
-			$('#geminiEnabled').prop('checked', true);
+			$('#ollamaEnabled, #geminiEnabled').prop('checked', true).trigger('change');
+			$('#anthropicEnabled, #openaiEnabled').prop('checked', false).trigger('change');
 			$('#moderationProvider').val('ollama').trigger('change');
-			$('#copilotProvider').val('gemini').trigger('change');
-			$('#summarizerProvider').val('gemini').trigger('change');
+			$('#copilotProvider, #summarizerProvider').val('gemini').trigger('change');
 			this.alerts.success('Applied "Speed & Cost Champion" preset! Click Save Changes to apply.');
 		} else if (this.preset === 'enterprise') {
-			$('#openaiEnabled').prop('checked', true);
-			$('#geminiEnabled').prop('checked', true);
-			$('#anthropicEnabled').prop('checked', true);
+			$('#ollamaEnabled').prop('checked', false).trigger('change');
+			$('#openaiEnabled, #geminiEnabled, #anthropicEnabled').prop('checked', true).trigger('change');
 			$('#moderationProvider').val('openai').trigger('change');
 			$('#copilotProvider').val('gemini').trigger('change');
 			$('#summarizerProvider').val('anthropic').trigger('change');
@@ -474,15 +471,25 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, widgetFactory, alerts } = this.context;
 
-		// Dynamic toggle for Ollama Local Daemon vs Ollama Cloud
-		const syncOllamaCloudUI = () => {
+		// Synchronize card disabled look for all providers
+		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
+			const sync = () => {
+				const on = $(`#${p}Enabled`).is(':checked');
+				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
+			};
+			$(`#${p}Enabled`).on('change', sync);
+			sync();
+		});
+
+		const syncOllamaCloud = () => {
 			const isCloud = $('#ollamaUseCloud').is(':checked');
 			$('#ollama-local-url-group').toggleClass('d-none', isCloud);
 			$('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
 			$('#ollama-api-key-hint').text(isCloud ? '(Required for Ollama Cloud)' : '(Optional for local)');
 		};
-		$('#ollamaUseCloud').on('change', syncOllamaCloudUI);
-		syncOllamaCloudUI();
+		$('#ollamaUseCloud').on('change', syncOllamaCloud);
+		syncOllamaCloud();
 
 		// Test provider connection
 		$('.test-provider-btn').on('click', function () {
@@ -509,8 +516,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						if (res.models && res.models.length) {
 							new ModelPickerBuilder().forProvider(provider).withModels(res.models)
 								.withCurrentValue($(`#${provider}DefaultModel`).val())
-								.withTargetInput(`#${provider}DefaultModel`)
-								.build($(`#${provider}-model-picker`));
+								.withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
 						}
 					} else {
 						badge.html(widgetFactory.createStatusBadge('failed', 'Failed'));
@@ -536,8 +542,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						alerts.success(`Found ${models.length} available models for ${provider.toUpperCase()}`);
 						new ModelPickerBuilder().forProvider(provider).withModels(models)
 							.withCurrentValue(input.val() || models[0])
-							.withTargetInput(`#${input.attr('id')}`)
-							.build($(`#${provider}-model-picker`));
+							.withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
 						if (!input.val()) input.val(models[0]);
 					} else {
 						alerts.alert({ type: 'info', title: 'Model Detection', message: 'No models detected.' });
@@ -558,6 +563,13 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 class ModerationTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, modelProxy, alerts } = this.context;
+
+		const sync = () => {
+			const on = $('#moderationEnabled').is(':checked');
+			$('#moderation-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#moderationEnabled').on('change', sync);
+		sync();
 
 		$('#moderationSensitivity').on('input', function () {
 			$('#sensitivity-display').text($(this).val() + '%');
@@ -632,6 +644,13 @@ class CopilotTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, modelProxy, alerts } = this.context;
 
+		const sync = () => {
+			const on = $('#copilotEnabled').is(':checked');
+			$('#copilot-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#copilotEnabled').on('change', sync);
+		sync();
+
 		$('#provision-bot-btn').on('click', function () {
 			const btn = this;
 			AsyncButtonDecorator.decorate(btn, async () => {
@@ -678,6 +697,13 @@ class CopilotTabStrategy extends BaseTabStrategy {
 class SummarizerTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { modelProxy } = this.context;
+
+		const sync = () => {
+			const on = $('#summarizerEnabled').is(':checked');
+			$('#summarizer-card-body').toggleClass('card-switch-disabled', !on);
+		};
+		$('#summarizerEnabled').on('change', sync);
+		sync();
 
 		$('#summarizerProvider').on('change', function () {
 			const provider = $(this).val();
@@ -800,9 +826,18 @@ class CortexAdminApp {
 			alerts: alertsModule,
 		};
 
-		// 1. Load initial settings
-		settingsModule.load('ai-engine', $('#ai-settings-form'), function () {
-			$('#ollamaUseCloud').trigger('change');
+		// 1. Load initial settings and restore checkbox states accurately
+		settingsModule.load('ai-engine', $('#ai-settings-form'), function (err, values) {
+			const vals = values || {};
+			const boolKeys = [
+				'enabled', 'ollamaEnabled', 'ollamaUseCloud', 'geminiEnabled',
+				'anthropicEnabled', 'openaiEnabled', 'moderationEnabled',
+				'copilotEnabled', 'summarizerEnabled', 'summarizerDefaultOpen',
+			];
+			boolKeys.forEach((k) => {
+				const isChecked = vals[k] === 'on' || vals[k] === true || vals[k] === '1';
+				$(`input[name="${k}"][type="checkbox"]`).prop('checked', isChecked).trigger('change');
+			});
 		});
 
 		// 2. Secret inputs toggle

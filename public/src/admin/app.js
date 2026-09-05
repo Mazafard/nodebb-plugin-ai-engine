@@ -51,9 +51,18 @@ class CortexAdminApp {
 			alerts: alertsModule,
 		};
 
-		// 1. Load initial settings
-		settingsModule.load('ai-engine', $('#ai-settings-form'), function () {
-			$('#ollamaUseCloud').trigger('change');
+		// 1. Load initial settings and restore checkbox states accurately
+		settingsModule.load('ai-engine', $('#ai-settings-form'), function (err, values) {
+			const vals = values || {};
+			const boolKeys = [
+				'enabled', 'ollamaEnabled', 'ollamaUseCloud', 'geminiEnabled',
+				'anthropicEnabled', 'openaiEnabled', 'moderationEnabled',
+				'copilotEnabled', 'summarizerEnabled', 'summarizerDefaultOpen',
+			];
+			boolKeys.forEach((k) => {
+				const isChecked = vals[k] === 'on' || vals[k] === true || vals[k] === '1';
+				$(`input[name="${k}"][type="checkbox"]`).prop('checked', isChecked).trigger('change');
+			});
 		});
 
 		// 2. Secret inputs toggle
