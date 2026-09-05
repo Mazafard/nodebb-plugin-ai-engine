@@ -23,7 +23,6 @@ const files = [
 	'strategies/copilot.js',
 	'strategies/summarizer.js',
 	'strategies/audit.js',
-	'strategies/patterns.js',
 	'tab-factory.js',
 	'app.js',
 ];
@@ -33,7 +32,6 @@ let body = '';
 files.forEach(file => {
 	const fullPath = path.join(srcDir, file);
 	let content = fs.readFileSync(fullPath, 'utf8');
-	// Strip strict mode and commonjs module.exports/require statements for client bundle
 	content = content.replace(/'use strict';/g, '');
 	content = content.replace(/const\s+\{?[a-zA-Z0-9_,\s]+\}?\s*=\s*require\([^)]+\);?/g, '');
 	content = content.replace(/module\.exports\s*=\s*[^;]+;?/g, '');
@@ -44,7 +42,7 @@ const bundle = `'use strict';
 
 /**
  * Auto-generated bundle from public/src/admin/ modules.
- * Implements 13 GoF Design Patterns across the Admin Control Panel.
+ * Handles client-side ACP logic for Cortex AI Engine.
  */
 define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, alerts) {
 ${body}

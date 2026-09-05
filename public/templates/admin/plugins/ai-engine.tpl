@@ -12,7 +12,6 @@
 							<h3 class="mb-0 fw-bold">Cortex AI Community Engine</h3>
 							<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1">v{version}</span>
 							<span class="badge bg-secondary-subtle text-secondary border px-2 py-1">NodeBB v4</span>
-							<span class="badge bg-success-subtle text-success border px-2 py-1"><i class="fa fa-cubes me-1"></i>13 GoF Patterns</span>
 						</div>
 						<p class="text-muted mb-0 mt-1">Autonomous moderation, semantic RAG assistance, and thread synthesis powered by local and frontier LLMs.</p>
 					</div>
@@ -69,11 +68,6 @@
 						<i class="fa fa-history me-2"></i> Audit & Logs
 					</button>
 				</li>
-				<li class="nav-item" role="presentation">
-					<button class="nav-link rounded-pill px-4" id="patterns-tab" data-bs-toggle="tab" data-bs-target="#tab-patterns" type="button" role="tab">
-						<i class="fa fa-sitemap me-2"></i> Design Patterns
-					</button>
-				</li>
 			</ul>
 
 			<!-- Settings Form Wrapper -->
@@ -90,7 +84,7 @@
 									<label class="form-check-label fw-bold" for="enabled">Master AI Engine Switch</label>
 								</div>
 							</div>
-							<p class="text-muted">Select an architectural profile to automatically configure provider models and token balances across all engine features:</p>
+							<p class="text-muted">Select an operational profile to automatically configure provider models and balances:</p>
 
 							<div class="row g-3 mb-4">
 								<div class="col-md-4">
@@ -300,11 +294,11 @@
 									<label class="form-check-label fw-semibold" for="moderationEnabled">Enable Guard</label>
 								</div>
 							</div>
-							<p class="text-muted small">Scans submissions on <code>filter:post.save</code> using the <strong>Chain of Responsibility</strong> pipeline for deceptive link farming, aggressive promo, and toxicity.</p>
+							<p class="text-muted small">Scans submissions on <code>filter:post.save</code> for deceptive link farming, aggressive promo, and toxicity.</p>
 
 							<div class="row g-3 mb-4">
 								<div class="col-md-6">
-									<label class="form-label small fw-bold">Provider Strategy</label>
+									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="moderationProvider" name="moderationProvider" data-target-picker="#moderation-model-picker" data-target-input="#moderationModel">
 										<option value="ollama" {{{ if settings.moderationProvider === "ollama" }}}selected{{{ end }}}>Ollama (Local / Free)</option>
 										<option value="gemini" {{{ if settings.moderationProvider === "gemini" }}}selected{{{ end }}}>Google Gemini</option>
@@ -360,7 +354,7 @@
 
 							<!-- 🧪 INTERACTIVE MODERATION SANDBOX -->
 							<div class="sandbox-box p-3 rounded-3 border bg-light mt-3">
-								<h6 class="fw-bold mb-2"><i class="fa fa-vial text-info me-2"></i> Interactive Moderation Sandbox (Command Pattern)</h6>
+								<h6 class="fw-bold mb-2"><i class="fa fa-vial text-info me-2"></i> Interactive Moderation Sandbox</h6>
 								<p class="small text-muted mb-2">Simulate real-time AI scanning on sample text without affecting any forum posts:</p>
 								<div class="mb-2">
 									<textarea class="form-control font-monospace small" id="sandbox-input" rows="3" placeholder="Paste test message or promotional link farming spam here..."></textarea>
@@ -385,11 +379,11 @@
 									<label class="form-check-label fw-semibold" for="copilotEnabled">Enable Copilot</label>
 								</div>
 							</div>
-							<p class="text-muted small">Automatically analyzes new questions, searches solved forum discussions, and drafts an authoritative first reply using the <strong>CopilotReplyCommand</strong>.</p>
+							<p class="text-muted small">Automatically analyzes new questions, searches solved forum discussions, and drafts an authoritative first reply.</p>
 
 							<div class="row g-3 mb-4">
 								<div class="col-md-3">
-									<label class="form-label small fw-bold">Provider Strategy</label>
+									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="copilotProvider" name="copilotProvider" data-target-picker="#copilot-model-picker" data-target-input="#copilotModel">
 										<option value="gemini" {{{ if settings.copilotProvider === "gemini" }}}selected{{{ end }}}>Google Gemini (Recommended)</option>
 										<option value="openai" {{{ if settings.copilotProvider === "openai" }}}selected{{{ end }}}>OpenAI</option>
@@ -454,11 +448,11 @@
 									<label class="form-check-label fw-semibold" for="summarizerEnabled">Enable Summarizer</label>
 								</div>
 							</div>
-							<p class="text-muted small">Generates a neat, cached consensus card at the head of multi-page discussions using <strong>SummarizeThreadCommand</strong> and the <strong>CachedProviderProxy</strong>.</p>
+							<p class="text-muted small">Generates a neat, cached consensus card at the head of multi-page discussions, saving members from reading hundreds of posts.</p>
 
 							<div class="row g-3 mb-4">
 								<div class="col-md-4">
-									<label class="form-label small fw-bold">Provider Strategy</label>
+									<label class="form-label small fw-bold">Provider</label>
 									<select class="form-select provider-selector" id="summarizerProvider" name="summarizerProvider" data-target-picker="#summarizer-model-picker" data-target-input="#summarizerModel">
 										<option value="anthropic" {{{ if settings.summarizerProvider === "anthropic" }}}selected{{{ end }}}>Anthropic Claude (Recommended)</option>
 										<option value="gemini" {{{ if settings.summarizerProvider === "gemini" }}}selected{{{ end }}}>Google Gemini</option>
@@ -553,166 +547,6 @@
 										{{{ end }}}
 									</tbody>
 								</table>
-							</div>
-						</div>
-					</div>
-
-					<!-- TAB 7: ARCHITECTURE & DESIGN PATTERNS -->
-					<div class="tab-pane fade" id="tab-patterns" role="tabpanel">
-						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4">
-							<div class="d-flex justify-content-between align-items-center mb-3">
-								<div>
-									<h5 class="fw-bold mb-0"><i class="fa fa-sitemap text-primary me-2"></i> 13 Gang of Four (GoF) Software Design Patterns Matrix</h5>
-									<p class="text-muted small mb-0 mt-1">Verified architectural implementation spanning the server engine and client admin control panel.</p>
-								</div>
-								<span class="badge bg-success px-3 py-2 fs-6"><i class="fa fa-check-circle me-1"></i> All 13 Active</span>
-							</div>
-
-							<div class="row g-3">
-								<!-- Creational -->
-								<div class="col-12">
-									<h6 class="fw-bold text-muted small text-uppercase mb-2"><i class="fa fa-cube me-1"></i> Creational Patterns</h6>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">1. Singleton</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>CentralModelFactory</code> / <code>CortexAdminApp</code></div>
-										<p class="small text-secondary mb-0">Guarantees a single central coordination instance for provider pooling, cache proxies, and UI state.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">2. Factory Method</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>createProvider(type)</code> / <code>TabHandlerFactory</code></div>
-										<p class="small text-secondary mb-0">Dynamically manufactures, decorates, and proxies concrete providers and ACP tab controllers.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">3. Abstract Factory</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>AIEngineAbstractFactory</code> / <code>UIWidgetFactory</code></div>
-										<p class="small text-secondary mb-0">Produces cohesive feature engine families (Moderation, Copilot, Summarizer) and standardized UI widgets.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">13. Builder</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>InferenceRequestBuilder</code> / <code>ModelPickerBuilder</code></div>
-										<p class="small text-secondary mb-0">Fluent step-by-step construction of complex inference prompts, options, and interactive pill selectors.</p>
-									</div>
-								</div>
-
-								<!-- Structural -->
-								<div class="col-12 mt-3">
-									<h6 class="fw-bold text-muted small text-uppercase mb-2"><i class="fa fa-cubes me-1"></i> Structural Patterns</h6>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">5. Adapter</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>*Adapter.js</code> / <code>AjaxClientAdapter</code></div>
-										<p class="small text-secondary mb-0">Standardizes disparate REST schemas (Ollama, Gemini, Claude, OpenAI) and jQuery AJAX CSRF calls.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">6. Facade</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>CortexAIFacade</code> / <code>AdminAPIFacade</code></div>
-										<p class="small text-secondary mb-0">Exposes a clean unified API masking all internal pipelines, commands, builders, and decorators.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">8. Decorator</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>RetryDecorator</code> / <code>AsyncButtonDecorator</code></div>
-										<p class="small text-secondary mb-0">Dynamically augments inference calls with exponential backoff, telemetry, and UI button loading states.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-3">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">9. Proxy</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>CachedProviderProxy</code> / <code>ClientModelCacheProxy</code></div>
-										<p class="small text-secondary mb-0">Caches idempotent responses and detected model lists in memory and Redis to eliminate redundant roundtrips.</p>
-									</div>
-								</div>
-
-								<!-- Behavioral -->
-								<div class="col-12 mt-3">
-									<h6 class="fw-bold text-muted small text-uppercase mb-2"><i class="fa fa-network-wired me-1"></i> Behavioral Patterns</h6>
-								</div>
-								<div class="col-md-6 col-lg-4">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">4. Strategy</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>IModelProviderAdapter</code> / <code>TabStrategy</code></div>
-										<p class="small text-secondary mb-0">Encapsulates interchangeable algorithms for LLM inference and per-tab rendering logic.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-4">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">7. Chain of Responsibility</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>PipelineHandler</code> / <code>FormValidationPipeline</code></div>
-										<p class="small text-secondary mb-0">Processes pre-inference exemptions, sanitizations, rate limits, and ACP input validations sequentially.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-4">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">10. Template Method</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>BaseProvider.executeWorkflow</code> / <code>BaseTabStrategy</code></div>
-										<p class="small text-secondary mb-0">Defines invariant skeleton execution workflows while letting subclasses customize hooks.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6 mt-2">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">11. Observer</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>eventBus (Node.js EventEmitter)</code> / <code>AdminEventBus</code></div>
-										<p class="small text-secondary mb-0">Pub/Sub event notification system. Synchronizes detected models across all tabs and publishes domain audit events.</p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6 mt-2">
-									<div class="pattern-box card h-100 p-3 border rounded-3 bg-light">
-										<div class="d-flex justify-content-between align-items-center mb-1">
-											<span class="fw-bold text-dark">12. Command</span>
-											<span class="badge bg-success-subtle text-success border">Active</span>
-										</div>
-										<div class="small text-muted mb-2"><code>ModeratePostCommand</code> / <code>ApplyPresetCommand</code></div>
-										<p class="small text-secondary mb-0">Encapsulates domain actions (moderating, answering, summarizing, preset switching) into standalone executable objects.</p>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>

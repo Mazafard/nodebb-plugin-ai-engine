@@ -64,14 +64,3 @@
 .model-select-pill:hover {
 	transform: translateY(-1px);
 }
-
-.pattern-box {
-	transition: all 0.2s ease-in-out;
-	border-color: #e3e6ec !important;
-}
-
-.pattern-box:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
-	border-color: #0d6efd !important;
-}

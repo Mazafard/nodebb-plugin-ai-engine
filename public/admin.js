@@ -2,7 +2,7 @@
 
 /**
  * Auto-generated bundle from public/src/admin/ modules.
- * Implements 13 GoF Design Patterns across the Admin Control Panel.
+ * Handles client-side ACP logic for Cortex AI Engine.
  */
 define('admin/plugins/ai-engine', ['settings', 'alerts'], function (settings, alerts) {
 
@@ -720,15 +720,6 @@ class AuditTabStrategy extends BaseTabStrategy {
 	}
 }
 
-	// --- Module: strategies/patterns.js ---
-/**
- * [Pattern 4: Strategy Pattern]
- * PatternsTabStrategy coordinates architecture health inspections.
- */
-class PatternsTabStrategy extends BaseTabStrategy {
-	bindEvents() {}
-}
-
 	// --- Module: tab-factory.js ---
 /**
  * [Pattern 2: Factory Method Pattern]
@@ -749,8 +740,6 @@ class TabStrategyFactory {
 				return new SummarizerTabStrategy(tabId, context);
 			case 'tab-audit':
 				return new AuditTabStrategy(tabId, context);
-			case 'tab-patterns':
-				return new PatternsTabStrategy(tabId, context);
 			default:
 				return new BaseTabStrategy(tabId, context);
 		}
@@ -828,7 +817,6 @@ class CortexAdminApp {
 			'tab-copilot',
 			'tab-summarizer',
 			'tab-audit',
-			'tab-patterns',
 		];
 
 		tabIds.forEach(id => {

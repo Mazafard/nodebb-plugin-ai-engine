@@ -80,7 +80,6 @@ class CortexAdminApp {
 			'tab-copilot',
 			'tab-summarizer',
 			'tab-audit',
-			'tab-patterns',
 		];
 
 		tabIds.forEach(id => {

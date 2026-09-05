@@ -7,7 +7,6 @@ const ModerationTabStrategy = require('./strategies/moderation');
 const CopilotTabStrategy = require('./strategies/copilot');
 const SummarizerTabStrategy = require('./strategies/summarizer');
 const AuditTabStrategy = require('./strategies/audit');
-const PatternsTabStrategy = require('./strategies/patterns');
 
 /**
  * [Pattern 2: Factory Method Pattern]
@@ -28,8 +27,6 @@ class TabStrategyFactory {
 				return new SummarizerTabStrategy(tabId, context);
 			case 'tab-audit':
 				return new AuditTabStrategy(tabId, context);
-			case 'tab-patterns':
-				return new PatternsTabStrategy(tabId, context);
 			default:
 				return new BaseTabStrategy(tabId, context);
 		}
