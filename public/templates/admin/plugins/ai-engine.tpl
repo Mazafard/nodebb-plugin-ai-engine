@@ -27,7 +27,7 @@
 						<span class="fw-bold fs-5 d-block text-danger">{stats.quarantinedCount}</span>
 					</div>
 					<div class="telemetry-pill">
-						<span class="text-muted small">Copilot Replies</span>
+						<span class="text-muted small">Assistant Replies</span>
 						<span class="fw-bold fs-5 d-block text-success">{stats.copilotReplies}</span>
 					</div>
 					<div class="telemetry-pill">
@@ -56,7 +56,7 @@
 				</li>
 				<li class="nav-item" role="presentation">
 					<button class="nav-link rounded-pill px-4" id="copilot-tab" data-bs-toggle="tab" data-bs-target="#tab-copilot" type="button" role="tab">
-						<i class="fa fa-robot me-2"></i> Community Copilot
+						<i class="fa fa-robot me-2"></i> Community Assistant
 					</button>
 				</li>
 				<li class="nav-item" role="presentation">
@@ -131,15 +131,18 @@
 					<div class="tab-pane fade" id="tab-providers" role="tabpanel">
 						<div class="row g-4">
 							<!-- Ollama Card -->
-							<div class="col-lg-6">
+							<div class="col-12">
 								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-ollama">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-server fa-lg text-success"></i>
 											<h5 class="fw-bold mb-0">Ollama (Local & Cloud)</h5>
 										</div>
-										<div class="form-check form-switch m-0">
-											<input class="form-check-input" type="checkbox" id="ollamaEnabled" name="ollamaEnabled" {{{ if settings.ollamaEnabled }}}checked{{{ end }}}>
+										<div class="d-flex align-items-center gap-2">
+											<span class="badge bg-secondary-subtle text-secondary border folded-badge d-none">Folded</span>
+											<div class="form-check form-switch m-0">
+												<input class="form-check-input" type="checkbox" id="ollamaEnabled" name="ollamaEnabled" {{{ if settings.ollamaEnabled }}}checked{{{ end }}}>
+											</div>
 										</div>
 									</div>
 
@@ -201,15 +204,18 @@
 							</div>
 
 							<!-- Google Gemini Card -->
-							<div class="col-lg-6">
+							<div class="col-12">
 								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-gemini">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-gem fa-lg text-primary"></i>
 											<h5 class="fw-bold mb-0">Google Gemini</h5>
 										</div>
-										<div class="form-check form-switch m-0">
-											<input class="form-check-input" type="checkbox" id="geminiEnabled" name="geminiEnabled" {{{ if settings.geminiEnabled }}}checked{{{ end }}}>
+										<div class="d-flex align-items-center gap-2">
+											<span class="badge bg-secondary-subtle text-secondary border folded-badge d-none">Folded</span>
+											<div class="form-check form-switch m-0">
+												<input class="form-check-input" type="checkbox" id="geminiEnabled" name="geminiEnabled" {{{ if settings.geminiEnabled }}}checked{{{ end }}}>
+											</div>
 										</div>
 									</div>
 									<div class="provider-card-body d-flex flex-column flex-grow-1" id="gemini-card-body">
@@ -241,15 +247,18 @@
 							</div>
 
 							<!-- Anthropic Card -->
-							<div class="col-lg-6">
+							<div class="col-12">
 								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-anthropic">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-feather-alt fa-lg text-warning"></i>
 											<h5 class="fw-bold mb-0">Anthropic Claude</h5>
 										</div>
-										<div class="form-check form-switch m-0">
-											<input class="form-check-input" type="checkbox" id="anthropicEnabled" name="anthropicEnabled" {{{ if settings.anthropicEnabled }}}checked{{{ end }}}>
+										<div class="d-flex align-items-center gap-2">
+											<span class="badge bg-secondary-subtle text-secondary border folded-badge d-none">Folded</span>
+											<div class="form-check form-switch m-0">
+												<input class="form-check-input" type="checkbox" id="anthropicEnabled" name="anthropicEnabled" {{{ if settings.anthropicEnabled }}}checked{{{ end }}}>
+											</div>
 										</div>
 									</div>
 									<div class="provider-card-body d-flex flex-column flex-grow-1" id="anthropic-card-body">
@@ -281,15 +290,18 @@
 							</div>
 
 							<!-- OpenAI Card -->
-							<div class="col-lg-6">
+							<div class="col-12">
 								<div class="card shadow-sm p-4 border-0 rounded-4 h-100" id="card-openai">
 									<div class="d-flex justify-content-between align-items-center mb-3">
 										<div class="d-flex align-items-center gap-2">
 											<i class="fa fa-circle-notch fa-lg text-info"></i>
 											<h5 class="fw-bold mb-0">OpenAI / Compatible</h5>
 										</div>
-										<div class="form-check form-switch m-0">
-											<input class="form-check-input" type="checkbox" id="openaiEnabled" name="openaiEnabled" {{{ if settings.openaiEnabled }}}checked{{{ end }}}>
+										<div class="d-flex align-items-center gap-2">
+											<span class="badge bg-secondary-subtle text-secondary border folded-badge d-none">Folded</span>
+											<div class="form-check form-switch m-0">
+												<input class="form-check-input" type="checkbox" id="openaiEnabled" name="openaiEnabled" {{{ if settings.openaiEnabled }}}checked{{{ end }}}>
+											</div>
 										</div>
 									</div>
 									<div class="provider-card-body d-flex flex-column flex-grow-1" id="openai-card-body">
@@ -407,18 +419,18 @@
 						</div>
 					</div>
 
-					<!-- TAB 4: COMMUNITY COPILOT -->
+					<!-- TAB 4: COMMUNITY ASSISTANT -->
 					<div class="tab-pane fade" id="tab-copilot" role="tabpanel">
 						<div class="card shadow-sm p-4 border-0 rounded-4 mb-4" id="card-copilot">
 							<div class="d-flex justify-content-between align-items-center mb-3">
-								<h5 class="fw-bold mb-0"><i class="fa fa-robot text-success me-2"></i> RAG-Powered First Response Bot</h5>
+								<h5 class="fw-bold mb-0"><i class="fa fa-robot text-success me-2"></i> RAG-Powered First Response Bot (Community Assistant)</h5>
 								<div class="form-check form-switch m-0">
 									<input class="form-check-input" type="checkbox" id="copilotEnabled" name="copilotEnabled" {{{ if settings.copilotEnabled }}}checked{{{ end }}}>
-									<label class="form-check-label fw-semibold" for="copilotEnabled">Enable Copilot</label>
+									<label class="form-check-label fw-semibold" for="copilotEnabled">Enable Assistant</label>
 								</div>
 							</div>
 							<div class="card-switch-body" id="copilot-card-body">
-								<p class="text-muted small">Automatically analyzes new questions, searches solved forum discussions, and drafts an authoritative first reply.</p>
+								<p class="text-muted small">Autonomous community assistant that scans new questions, searches solved discussions, and drafts an authoritative first reply.</p>
 
 								<div class="row g-3 mb-4">
 									<div class="col-md-3">

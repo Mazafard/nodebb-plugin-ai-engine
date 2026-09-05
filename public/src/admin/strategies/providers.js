@@ -12,11 +12,13 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, widgetFactory, alerts } = this.context;
 
-		// Synchronize card disabled look for all providers
+		// Synchronize card disabled & folded look for all providers
 		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
 			const sync = () => {
 				const on = $(`#${p}Enabled`).is(':checked');
-				$(`#card-${p}`).toggleClass('card-disabled', !on); $(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).toggleClass('card-disabled', !on).toggleClass('card-folded', !on);
+				$(`#card-${p}`).find('.folded-badge').toggleClass('d-none', on);
+				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
 				$(`#card-${p}`).find('button:not(.form-check-input)').prop('disabled', !on);
 				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
 			};
@@ -26,8 +28,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 		const syncOllamaCloud = () => {
 			const isCloud = $('#ollamaUseCloud').is(':checked');
-			$('#ollama-local-url-group').toggleClass('d-none', isCloud);
-			$('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
+			$('#ollama-local-url-group').toggleClass('d-none', isCloud); $('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
 			$('#ollama-api-key-hint').text(isCloud ? '(Required for Ollama Cloud)' : '(Optional for local)');
 		};
 		$('#ollamaUseCloud').on('change', syncOllamaCloud);
@@ -56,8 +57,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						alerts.success(`${provider.toUpperCase()} connected successfully! (${res.latencyMs}ms)`);
 						if (res.models && res.models.length) {
 							new ModelPickerBuilder().forProvider(provider).withModels(res.models)
-								.withCurrentValue($(`#${provider}DefaultModel`).val())
-								.withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
+								.withCurrentValue($(`#${provider}DefaultModel`).val()).withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
 						}
 					} else {
 						badge.html(widgetFactory.createStatusBadge('failed', 'Failed'));
@@ -82,9 +82,8 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 					if (models && models.length) {
 						alerts.success(`Found ${models.length} available models for ${provider.toUpperCase()}`);
 						new ModelPickerBuilder().forProvider(provider).withModels(models)
-							.withCurrentValue(input.val() || models[0])
-							.withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
-						if (!input.val()) input.val(models[0]);
+							.withCurrentValue(input.val() || (models[0].id || models[0])).withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
+						if (!input.val()) input.val(models[0].id || models[0]);
 					} else {
 						alerts.alert({ type: 'info', title: 'Model Detection', message: 'No models detected.' });
 					}

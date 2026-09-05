@@ -226,7 +226,7 @@ class UIWidgetFactory {
 	// --- Module: builder.js ---
 /**
  * [Pattern 13: Builder Pattern]
- * Fluent builder for interactive model pill groups across ACP tabs.
+ * Fluent builder for interactive model catalog with live API pricing and sorting.
  */
 class ModelPickerBuilder {
 	constructor() {
@@ -236,25 +236,10 @@ class ModelPickerBuilder {
 		this.targetInputSelector = '';
 	}
 
-	forProvider(provider) {
-		this.provider = provider;
-		return this;
-	}
-
-	withModels(models) {
-		this.models = models || [];
-		return this;
-	}
-
-	withCurrentValue(value) {
-		this.currentValue = value || '';
-		return this;
-	}
-
-	withTargetInput(selector) {
-		this.targetInputSelector = selector;
-		return this;
-	}
+	forProvider(p) { this.provider = p; return this; }
+	withModels(m) { this.models = m || []; return this; }
+	withCurrentValue(v) { this.currentValue = v || ''; return this; }
+	withTargetInput(s) { this.targetInputSelector = s; return this; }
 
 	build($container) {
 		if (!$container || !$container.length) return;
@@ -263,31 +248,57 @@ class ModelPickerBuilder {
 			return;
 		}
 
-		let html = `
-			<div class="p-2 bg-light rounded-3 border">
-				<div class="d-flex justify-content-between align-items-center mb-1">
-					<span class="small fw-bold text-muted"><i class="fa fa-list me-1"></i> Received Models (${this.models.length}):</span>
-					<span class="small text-muted" style="font-size: 0.75rem;">Click pill to select</span>
-				</div>
-				<div class="d-flex flex-wrap gap-1">
-		`;
+		const norm = this.models.map(m => (typeof m === 'string'
+			? { id: m, name: m, priceScore: 999, formattedPrice: 'API Rate', tier: 'standard' }
+			: Object.assign({ priceScore: 999, formattedPrice: 'API Rate', tier: 'standard' }, m)));
 
-		const currentVal = this.currentValue;
 		const provider = this.provider;
 		const targetInput = this.targetInputSelector;
+		const currentVal = this.currentValue;
 
-		this.models.forEach(m => {
-			const isSelected = (m === currentVal);
-			const btnClass = isSelected ? 'btn-primary active' : 'btn-outline-secondary';
-			html += `<button type="button" class="btn btn-sm ${btnClass} py-0 px-2 model-select-pill" data-provider="${provider}" data-model="${m}" data-target-input="${targetInput}">${m}</button>`;
-		});
-
-		html += `
+		const html = `
+			<div class="model-picker-card p-3 bg-light rounded-3 border mt-2">
+				<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2 pb-2 border-bottom">
+					<span class="small fw-bold text-dark"><i class="fa fa-cubes text-primary me-1"></i> Received Models (${norm.length}):</span>
+					<div class="d-flex align-items-center gap-2">
+						<input type="text" class="form-control form-control-sm model-filter-input" placeholder="Search models..." style="width: 130px;">
+						<select class="form-select form-select-sm model-sort-select" style="width: 145px;">
+							<option value="price-asc">Price: Low to High</option>
+							<option value="price-desc">Price: High to Low</option>
+							<option value="name-asc">Name: A to Z</option>
+						</select>
+					</div>
 				</div>
+				<div class="model-pills-scroll-area d-flex flex-wrap gap-2" style="max-height: 200px; overflow-y: auto;"></div>
 			</div>
 		`;
-
 		$container.html(html).removeClass('d-none');
+
+		const $scroll = $container.find('.model-pills-scroll-area');
+		const render = (list) => {
+			let out = '';
+			list.forEach(m => {
+				const isSel = (m.id === currentVal || m.name === currentVal);
+				const btnClass = isSel ? 'btn-primary active' : 'btn-outline-secondary bg-white text-dark';
+				const badgeClass = m.tier === 'free' ? 'bg-success text-white' : 'bg-primary-subtle text-primary border';
+				out += `<button type="button" class="btn btn-sm ${btnClass} model-select-pill d-inline-flex align-items-center gap-2 py-1 px-2" data-provider="${provider}" data-model="${m.id}" data-target-input="${targetInput}"><span class="small fw-semibold">${m.name}</span><span class="badge ${badgeClass}" style="font-size: 0.68rem;">${m.formattedPrice}</span></button>`;
+			});
+			$scroll.html(out || '<div class="small text-muted p-2">No matching models found.</div>');
+		};
+
+		const refresh = () => {
+			const q = ($container.find('.model-filter-input').val() || '').toLowerCase().trim();
+			const sort = $container.find('.model-sort-select').val() || 'price-asc';
+			let filtered = norm.filter(m => !q || m.name.toLowerCase().includes(q) || (m.formattedPrice || '').toLowerCase().includes(q));
+			if (sort === 'price-asc') filtered.sort((a, b) => a.priceScore - b.priceScore);
+			else if (sort === 'price-desc') filtered.sort((a, b) => b.priceScore - a.priceScore);
+			else filtered.sort((a, b) => a.name.localeCompare(b.name));
+			render(filtered);
+		};
+
+		$container.find('.model-filter-input').on('input', refresh);
+		$container.find('.model-sort-select').on('change', refresh);
+		refresh();
 	}
 }
 
@@ -480,11 +491,13 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 	bindEvents() {
 		const { apiFacade, widgetFactory, alerts } = this.context;
 
-		// Synchronize card disabled look for all providers
+		// Synchronize card disabled & folded look for all providers
 		['ollama', 'gemini', 'anthropic', 'openai'].forEach((p) => {
 			const sync = () => {
 				const on = $(`#${p}Enabled`).is(':checked');
-				$(`#card-${p}`).toggleClass('card-disabled', !on); $(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
+				$(`#card-${p}`).toggleClass('card-disabled', !on).toggleClass('card-folded', !on);
+				$(`#card-${p}`).find('.folded-badge').toggleClass('d-none', on);
+				$(`#${p}-card-body`).toggleClass('card-switch-disabled', !on);
 				$(`#card-${p}`).find('button:not(.form-check-input)').prop('disabled', !on);
 				if (!on) $(`#${p}-status`).html('<span class="badge bg-secondary-subtle text-secondary border">Disabled</span>');
 			};
@@ -494,8 +507,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 
 		const syncOllamaCloud = () => {
 			const isCloud = $('#ollamaUseCloud').is(':checked');
-			$('#ollama-local-url-group').toggleClass('d-none', isCloud);
-			$('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
+			$('#ollama-local-url-group').toggleClass('d-none', isCloud); $('#ollama-cloud-url-group').toggleClass('d-none', !isCloud);
 			$('#ollama-api-key-hint').text(isCloud ? '(Required for Ollama Cloud)' : '(Optional for local)');
 		};
 		$('#ollamaUseCloud').on('change', syncOllamaCloud);
@@ -524,8 +536,7 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 						alerts.success(`${provider.toUpperCase()} connected successfully! (${res.latencyMs}ms)`);
 						if (res.models && res.models.length) {
 							new ModelPickerBuilder().forProvider(provider).withModels(res.models)
-								.withCurrentValue($(`#${provider}DefaultModel`).val())
-								.withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
+								.withCurrentValue($(`#${provider}DefaultModel`).val()).withTargetInput(`#${provider}DefaultModel`).build($(`#${provider}-model-picker`));
 						}
 					} else {
 						badge.html(widgetFactory.createStatusBadge('failed', 'Failed'));
@@ -550,9 +561,8 @@ class ProvidersTabStrategy extends BaseTabStrategy {
 					if (models && models.length) {
 						alerts.success(`Found ${models.length} available models for ${provider.toUpperCase()}`);
 						new ModelPickerBuilder().forProvider(provider).withModels(models)
-							.withCurrentValue(input.val() || models[0])
-							.withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
-						if (!input.val()) input.val(models[0]);
+							.withCurrentValue(input.val() || (models[0].id || models[0])).withTargetInput(`#${input.attr('id')}`).build($(`#${provider}-model-picker`));
+						if (!input.val()) input.val(models[0].id || models[0]);
 					} else {
 						alerts.alert({ type: 'info', title: 'Model Detection', message: 'No models detected.' });
 					}
