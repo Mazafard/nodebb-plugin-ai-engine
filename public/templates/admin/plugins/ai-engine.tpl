@@ -90,36 +90,42 @@
 
 								<div class="row g-3 mb-4">
 									<div class="col-md-4">
-										<div class="preset-card card h-100 p-3 border-2" data-preset="private">
+										<div class="preset-card card h-100 p-4 border-2 d-flex flex-column" data-preset="private">
 											<div class="d-flex justify-content-between align-items-center mb-2">
 												<span class="badge bg-success-subtle text-success border">100% Free & Private</span>
 												<i class="fa fa-server text-success"></i>
 											</div>
 											<h6 class="fw-bold mb-1">Local Ollama Sanctuary</h6>
-											<p class="small text-muted mb-3">All moderation, RAG, and summarization runs on local self-hosted models. Zero API bills, complete privacy.</p>
-											<button type="button" class="btn btn-sm btn-outline-success w-100 apply-preset-btn" data-preset="private">Apply Preset</button>
+											<p class="small text-muted flex-grow-1 mb-3">All moderation, RAG, and summarization runs on local self-hosted models. Zero API bills, complete privacy.</p>
+											<div class="mt-auto pt-2">
+												<button type="button" class="btn btn-sm btn-outline-success w-100 apply-preset-btn" data-preset="private">Apply Preset</button>
+											</div>
 										</div>
 									</div>
 									<div class="col-md-4">
-										<div class="preset-card card h-100 p-3 border-2 active-preset" data-preset="balanced">
+										<div class="preset-card card h-100 p-4 border-2 d-flex flex-column active-preset" data-preset="balanced">
 											<div class="d-flex justify-content-between align-items-center mb-2">
 												<span class="badge bg-primary-subtle text-primary border">Recommended</span>
 												<i class="fa fa-balance-scale text-primary"></i>
 											</div>
 											<h6 class="fw-bold mb-1">Speed & Cost Champion</h6>
-											<p class="small text-muted mb-3">Ollama for zero-cost moderation triage + Google Gemini 1.5 Flash for lightning-fast sub-second RAG & summaries.</p>
-											<button type="button" class="btn btn-sm btn-outline-primary w-100 apply-preset-btn" data-preset="balanced">Apply Preset</button>
+											<p class="small text-muted flex-grow-1 mb-3">Ollama for zero-cost moderation triage + Google Gemini 1.5 Flash for lightning-fast sub-second RAG & summaries.</p>
+											<div class="mt-auto pt-2">
+												<button type="button" class="btn btn-sm btn-outline-primary w-100 apply-preset-btn" data-preset="balanced">Apply Preset</button>
+											</div>
 										</div>
 									</div>
 									<div class="col-md-4">
-										<div class="preset-card card h-100 p-3 border-2" data-preset="enterprise">
+										<div class="preset-card card h-100 p-4 border-2 d-flex flex-column" data-preset="enterprise">
 											<div class="d-flex justify-content-between align-items-center mb-2">
 												<span class="badge bg-warning-subtle text-warning border">Frontier Quality</span>
 												<i class="fa fa-crown text-warning"></i>
 											</div>
 											<h6 class="fw-bold mb-1">Enterprise Synergy</h6>
-											<p class="small text-muted mb-3">GPT-4o-mini for moderation, Gemini Flash for Copilot answers, and Claude 3.5 Sonnet for deep debate synthesis.</p>
-											<button type="button" class="btn btn-sm btn-outline-warning w-100 apply-preset-btn" data-preset="enterprise">Apply Preset</button>
+											<p class="small text-muted flex-grow-1 mb-3">GPT-4o-mini for moderation, Gemini Flash for Copilot answers, and Claude 3.5 Sonnet for deep debate synthesis.</p>
+											<div class="mt-auto pt-2">
+												<button type="button" class="btn btn-sm btn-outline-warning w-100 apply-preset-btn" data-preset="enterprise">Apply Preset</button>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -353,14 +359,14 @@
 							<div class="card-switch-body" id="moderation-card-body">
 								<p class="text-muted small">Scans submissions on <code>filter:post.save</code> for deceptive link farming, aggressive promo, and toxicity.</p>
 
-								<div class="row g-3 mb-4">
+								<div class="row g-3 mb-3">
 									<div class="col-md-6">
-										<label class="form-label small fw-bold">Provider</label>
+										<label class="form-label small fw-bold">Inference Provider</label>
 										<select class="form-select provider-selector" id="moderationProvider" name="moderationProvider" data-target-picker="#moderation-model-picker" data-target-input="#moderationModel">
-											<option value="ollama">Ollama (Local / Free)</option>
-											<option value="gemini">Google Gemini</option>
-											<option value="openai">OpenAI</option>
-											<option value="anthropic">Anthropic Claude</option>
+											<option value="ollama">Ollama (Self-Hosted / Cloud)</option>
+											<option value="gemini">Google Gemini (Ultra-Fast Flash)</option>
+											<option value="openai">OpenAI (GPT-4o / Compatible)</option>
+											<option value="anthropic">Anthropic Claude (Sonnet / Haiku)</option>
 										</select>
 									</div>
 									<div class="col-md-6">
@@ -371,32 +377,34 @@
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="moderation-model-picker"></div>
+									</div>
+									<div class="col-12">
+										<div class="model-picker-container mt-1 d-none" id="moderation-model-picker"></div>
 									</div>
 								</div>
 
 								<div class="row g-3 mb-4">
-									<div class="col-md-4">
+									<div class="col-md-6 col-lg-3">
 										<label class="form-label small fw-bold d-flex justify-content-between">
-											<span>Sensitivity Threshold</span>
+											<span>Sensitivity</span>
 											<span class="text-danger fw-bold" id="sensitivity-display">{settings.moderationSensitivity}%</span>
 										</label>
 										<input type="range" class="form-range" id="moderationSensitivity" name="moderationSensitivity" min="10" max="95" step="5" value="{settings.moderationSensitivity}">
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-6 col-lg-3">
 										<label class="form-label small fw-bold">Quarantine Action</label>
 										<select class="form-select" id="moderationAction" name="moderationAction">
-											<option value="queue">Send to NodeBB Moderation Queue</option>
+											<option value="queue">NodeBB Moderation Queue</option>
 											<option value="flag">Publish & Create Staff Flag</option>
 											<option value="reject">Reject Post Immediately</option>
 										</select>
 									</div>
-									<div class="col-md-4">
-										<label class="form-label small fw-bold">Bypass Minimum Reputation</label>
+									<div class="col-md-6 col-lg-3">
+										<label class="form-label small fw-bold">Bypass Min Reputation</label>
 										<input type="number" class="form-control" id="moderationMinReputation" name="moderationMinReputation" value="{settings.moderationMinReputation}">
 									</div>
-									<div class="col-md-4">
-										<label class="form-label small fw-bold">Bypass Minimum Posts</label>
+									<div class="col-md-6 col-lg-3">
+										<label class="form-label small fw-bold">Bypass Min Posts</label>
 										<input type="number" class="form-control" id="moderationMinPosts" name="moderationMinPosts" value="{settings.moderationMinPosts}">
 									</div>
 								</div>
@@ -432,17 +440,17 @@
 							<div class="card-switch-body" id="copilot-card-body">
 								<p class="text-muted small">Autonomous community assistant that scans new questions, searches solved discussions, and drafts an authoritative first reply.</p>
 
-								<div class="row g-3 mb-4">
-									<div class="col-md-3">
-										<label class="form-label small fw-bold">Provider</label>
+								<div class="row g-3 mb-3">
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Inference Provider</label>
 										<select class="form-select provider-selector" id="copilotProvider" name="copilotProvider" data-target-picker="#copilot-model-picker" data-target-input="#copilotModel">
-											<option value="gemini">Google Gemini (Recommended)</option>
-											<option value="openai">OpenAI</option>
-											<option value="anthropic">Anthropic Claude</option>
-											<option value="ollama">Ollama (Local)</option>
+											<option value="gemini">Google Gemini (Fast RAG)</option>
+											<option value="openai">OpenAI (GPT-4o / Compatible)</option>
+											<option value="anthropic">Anthropic Claude (Sonnet / Haiku)</option>
+											<option value="ollama">Ollama (Self-Hosted / Cloud)</option>
 										</select>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-6">
 										<label class="form-label small fw-bold">Model Override</label>
 										<div class="input-group">
 											<input type="text" class="form-control" id="copilotModel" name="copilotModel" value="{settings.copilotModel}" placeholder="Leave blank for provider default">
@@ -450,20 +458,27 @@
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="copilot-model-picker"></div>
 									</div>
-									<div class="col-md-3">
+									<div class="col-12">
+										<div class="model-picker-container mt-1 d-none" id="copilot-model-picker"></div>
+									</div>
+								</div>
+
+								<div class="row g-3 mb-4">
+									<div class="col-md-6">
 										<label class="form-label small fw-bold">Bot User UID</label>
-										<div class="input-group">
-											<input type="number" class="form-control" id="copilotBotUid" name="copilotBotUid" value="{settings.copilotBotUid}">
-											<button class="btn btn-outline-secondary" type="button" id="provision-bot-btn" title="Auto-create dedicated Cortex Bot account">
-												<i class="fa fa-user-plus"></i> Auto-Create
+										<div class="input-group flex-nowrap">
+											<input type="number" class="form-control" id="copilotBotUid" name="copilotBotUid" value="{settings.copilotBotUid}" placeholder="e.g. 2">
+											<button class="btn btn-outline-primary text-nowrap" type="button" id="provision-bot-btn" title="Auto-create dedicated Cortex Bot account">
+												<i class="fa fa-user-plus me-1"></i> Auto-Create
 											</button>
 										</div>
+										<span class="text-muted" style="font-size: 0.75rem;">UID of the dedicated AI user posting assistant replies.</span>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-6">
 										<label class="form-label small fw-bold">Reply Delay (Seconds)</label>
 										<input type="number" class="form-control" id="copilotDelaySeconds" name="copilotDelaySeconds" value="{settings.copilotDelaySeconds}" min="1" max="120">
+										<span class="text-muted" style="font-size: 0.75rem;">Simulates natural response latency before posting.</span>
 									</div>
 								</div>
 
@@ -503,17 +518,17 @@
 							<div class="card-switch-body" id="summarizer-card-body">
 								<p class="text-muted small">Generates a neat, cached consensus card at the head of multi-page discussions, saving members from reading hundreds of posts.</p>
 
-								<div class="row g-3 mb-4">
-									<div class="col-md-4">
-										<label class="form-label small fw-bold">Provider</label>
+								<div class="row g-3 mb-3">
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Inference Provider</label>
 										<select class="form-select provider-selector" id="summarizerProvider" name="summarizerProvider" data-target-picker="#summarizer-model-picker" data-target-input="#summarizerModel">
-											<option value="anthropic">Anthropic Claude (Recommended)</option>
-											<option value="gemini">Google Gemini</option>
-											<option value="openai">OpenAI</option>
-											<option value="ollama">Ollama</option>
+											<option value="anthropic">Anthropic Claude (Deep Synthesis)</option>
+											<option value="gemini">Google Gemini (Ultra-Fast Flash)</option>
+											<option value="openai">OpenAI (GPT-4o / Compatible)</option>
+											<option value="ollama">Ollama (Self-Hosted / Cloud)</option>
 										</select>
 									</div>
-									<div class="col-md-4">
+									<div class="col-md-6">
 										<label class="form-label small fw-bold">Model Override</label>
 										<div class="input-group">
 											<input type="text" class="form-control" id="summarizerModel" name="summarizerModel" value="{settings.summarizerModel}" placeholder="Leave blank for provider default">
@@ -521,15 +536,22 @@
 												<i class="fa fa-sync-alt"></i> Detect
 											</button>
 										</div>
-										<div class="model-picker-container mt-2 d-none" id="summarizer-model-picker"></div>
 									</div>
-									<div class="col-md-2">
-										<label class="form-label small fw-bold">Min Posts</label>
+									<div class="col-12">
+										<div class="model-picker-container mt-1 d-none" id="summarizer-model-picker"></div>
+									</div>
+								</div>
+
+								<div class="row g-3 mb-4">
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Minimum Posts for Synthesis</label>
 										<input type="number" class="form-control" id="summarizerMinPosts" name="summarizerMinPosts" value="{settings.summarizerMinPosts}" min="5">
+										<span class="text-muted" style="font-size: 0.75rem;">Thread postcount threshold before generating consensus summary.</span>
 									</div>
-									<div class="col-md-2">
-										<label class="form-label small fw-bold">Re-summarize Delta</label>
+									<div class="col-md-6">
+										<label class="form-label small fw-bold">Re-summarize Post Interval Delta</label>
 										<input type="number" class="form-control" id="summarizerUpdateInterval" name="summarizerUpdateInterval" value="{settings.summarizerUpdateInterval}" min="5">
+										<span class="text-muted" style="font-size: 0.75rem;">Number of new replies before regenerating cached summary.</span>
 									</div>
 								</div>
 
@@ -558,11 +580,19 @@
 						<div class="card shadow-sm p-4 border-0 rounded-4">
 							<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
 								<h5 class="fw-bold mb-0"><i class="fa fa-history text-secondary me-2"></i> Real-Time AI Inference Audit Log</h5>
-								<div class="d-flex gap-1" id="log-filter-group">
-									<button type="button" class="btn btn-sm btn-primary log-filter-btn" data-filter="all">All ({logs.length})</button>
-									<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="moderation">Moderation</button>
-									<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="copilot">Copilot</button>
-									<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="summarizer">Summarizer</button>
+								<div class="d-flex align-items-center gap-2">
+									<div class="d-flex gap-1" id="log-filter-group">
+										<button type="button" class="btn btn-sm btn-primary log-filter-btn" data-filter="all">All ({logs.length})</button>
+										<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="moderation">Moderation</button>
+										<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="copilot">Assistant</button>
+										<button type="button" class="btn btn-sm btn-outline-secondary log-filter-btn" data-filter="summarizer">Summarizer</button>
+									</div>
+									<button type="button" class="btn btn-sm btn-outline-primary" id="refresh-logs-btn" title="Refresh Logs">
+										<i class="fa fa-sync-alt"></i> Refresh
+									</button>
+									<button type="button" class="btn btn-sm btn-outline-danger" id="clear-logs-btn" title="Clear All Logs">
+										<i class="fa fa-trash"></i> Clear
+									</button>
 								</div>
 							</div>
 							<div class="table-responsive">

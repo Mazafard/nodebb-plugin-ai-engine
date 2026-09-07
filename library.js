@@ -20,12 +20,20 @@ const plugin = {
 		return header;
 	},
 
+	async filterPostCreate(data) {
+		return await Moderation.handlePostSave(data);
+	},
+
 	async filterPostSave(data) {
 		return await Moderation.handlePostSave(data);
 	},
 
 	async actionTopicPost(data) {
 		await AutoResponder.handleTopicPost(data);
+	},
+
+	async filterTopicGet(data) {
+		return await Summarizer.handleTopicBuild(data);
 	},
 
 	async filterTopicBuild(data) {

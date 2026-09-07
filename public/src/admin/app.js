@@ -187,16 +187,18 @@ class CortexAdminApp {
 
 		// 8. Event Bus cross-tab pill re-render
 		this.eventBus.on('models:cached', ({ provider, models }) => {
-			$(`.provider-selector[value="${provider}"]`).each(function () {
-				const picker = $($(this).attr('data-target-picker'));
-				const input = $($(this).attr('data-target-input'));
-				if (picker.length && input.length) {
-					new ModelPickerBuilder()
-						.forProvider(provider)
-						.withModels(models)
-						.withCurrentValue(input.val())
-						.withTargetInput(`#${input.attr('id')}`)
-						.build(picker);
+			$('.provider-selector').each(function () {
+				if ($(this).val() === provider) {
+					const picker = $($(this).attr('data-target-picker'));
+					const input = $($(this).attr('data-target-input'));
+					if (picker.length && input.length) {
+						new ModelPickerBuilder()
+							.forProvider(provider)
+							.withModels(models)
+							.withCurrentValue(input.val())
+							.withTargetInput(`#${input.attr('id')}`)
+							.build(picker);
+					}
 				}
 			});
 		});
